@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국주식 영어 마스터</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --ink:#1a2233; --sub:#5b6577; --line:#e3e7ef;
+    --blue:#2563eb; --blue-soft:#eaf0fe; --green:#16a34a; --green-soft:#e8f7ee;
+    --red:#dc2626; --amber:#d97706; --amber-soft:#fdf3e3; --violet:#7c3aed; --violet-soft:#f1eafe;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{font-family:'Segoe UI','Malgun Gothic',sans-serif; background:var(--bg); color:var(--ink); line-height:1.55}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; padding:28px 20px 20px; text-align:center}
+  header h1{font-size:1.5rem; margin-bottom:4px}
+  header p{opacity:.85; font-size:.9rem}
+  .wrap{max-width:860px; margin:0 auto; padding:16px}
+  /* 탭 */
+  .tabs{display:flex; gap:8px; margin:14px 0; flex-wrap:wrap}
+  .tabs button{flex:1; min-width:100px; padding:10px 8px; border:1px solid var(--line); background:var(--card); border-radius:10px; font-size:.95rem; cursor:pointer; color:var(--sub); font-weight:600}
+  .tabs button.on{background:var(--blue); color:#fff; border-color:var(--blue)}
+  /* 필터 */
+  .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px}
+  .chip{padding:6px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card); cursor:pointer; font-size:.85rem; color:var(--sub)}
+  .chip.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+  #search{flex:1; min-width:160px; padding:8px 14px; border:1px solid var(--line); border-radius:999px; font-size:.9rem; outline:none}
+  #search:focus{border-color:var(--blue)}
+  .count{font-size:.8rem; color:var(--sub); margin-bottom:10px}
+  /* 레벨 배지 */
+  .lv{font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:6px}
+  .lv1{background:var(--green-soft); color:var(--green)}
+  .lv2{background:var(--amber-soft); color:var(--amber)}
+  .lv3{background:var(--violet-soft); color:var(--violet)}
+  .cat-tag{font-size:.72rem; color:var(--sub); background:var(--bg); padding:2px 8px; border-radius:6px}
+  /* 학습 카드 */
+  .term-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px}
+  .term-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .term-en{font-size:1.15rem; font-weight:700; color:var(--blue)}
+  .term-ko{font-weight:600}
+  .term-desc{color:var(--sub); font-size:.9rem; margin-top:6px}
+  .term-src{color:var(--amber); font-size:.78rem; margin-top:5px}
+  .term-ex{margin-top:10px; padding:10px 12px; background:var(--blue-soft); border-radius:8px; font-size:.9rem}
+  .term-ex .en{font-style:italic}
+  .term-ex .ko{color:var(--sub); margin-top:3px; font-size:.85rem}
+  .know-btn{margin-left:auto; border:1px solid var(--line); background:var(--card); border-radius:8px; padding:4px 12px; cursor:pointer; font-size:.8rem; color:var(--sub); white-space:nowrap}
+  .know-btn.known{background:var(--green-soft); color:var(--green); border-color:var(--green)}
+  .speak-btn{border:1px solid var(--line); background:var(--card); border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:.95rem; line-height:1; color:var(--blue)}
+  .speak-btn:hover{background:var(--blue-soft)}
+  .speak-btn.playing{background:var(--blue); color:#fff; border-color:var(--blue)}
+  #ttsToast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:.85rem; opacity:0; pointer-events:none; transition:.25s; z-index:50; max-width:88%; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.2)}
+  #ttsToast.show{opacity:.96; transform:translateX(-50%) translateY(0)}
+  /* 오늘의 5단어 */
+  .daily-head{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px; text-align:center}
+  .daily-head h2{font-size:1.2rem; margin-bottom:4px}
+  .daily-head p{color:var(--sub); font-size:.85rem}
+  .redraw-btn{margin-top:10px; border:1px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 14px; cursor:pointer; font-size:.82rem; color:var(--sub)}
+  /* 플래시카드 */
+  .flash-zone{text-align:center; padding:10px 0}
+  .flash-card{background:var(--card); border:1px solid var(--line); border-radius:16px; min-height:280px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; cursor:pointer; box-shadow:0 2px 10px rgba(30,58,138,.06)}
+  .flash-card .big{font-size:2rem; font-weight:800; color:var(--blue)}
+  .flash-card .hint{color:var(--sub); font-size:.85rem; margin-top:14px}
+  .flash-card .ans-ko{font-size:1.4rem; font-weight:700; margin-bottom:8px}
+  .flash-card .ans-desc{color:var(--sub); font-size:.92rem; max-width:520px}
+  .flash-card .ans-ex{margin-top:14px; padding:10px 14px; background:var(--blue-soft); border-radius:8px; font-size:.88rem; max-width:540px}
+  .flash-btns{display:flex; gap:10px; justify-content:center; margin-top:16px}
+  .flash-btns button{padding:10px 22px; border-radius:10px; border:none; cursor:pointer; font-size:.95rem; font-weight:600}
+  .b-no{background:#fdecec; color:var(--red)}
+  .b-yes{background:var(--green-soft); color:var(--green)}
+  .b-flip{background:var(--blue); color:#fff}
+  .flash-prog{color:var(--sub); font-size:.85rem; margin-bottom:10px}
+  /* 퀴즈 */
+  .quiz-q{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px}
+  .quiz-q h3{font-size:1.4rem; color:var(--blue); margin-bottom:4px}
+  .quiz-q .qhint{color:var(--sub); font-size:.85rem; margin-bottom:16px}
+  .opt{display:block; width:100%; text-align:left; padding:12px 16px; margin-bottom:8px; border:1px solid var(--line); background:var(--bg); border-radius:10px; cursor:pointer; font-size:.95rem}
+  .opt:hover{border-color:var(--blue)}
+  .opt.correct{background:var(--green-soft); border-color:var(--green); color:var(--green); font-weight:700}
+  .opt.wrong{background:#fdecec; border-color:var(--red); color:var(--red)}
+  .quiz-score{text-align:center; padding:40px 20px; background:var(--card); border-radius:14px; border:1px solid var(--line)}
+  .quiz-score .score{font-size:3rem; font-weight:800; color:var(--blue)}
+  .primary-btn{padding:12px 28px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; margin-top:16px}
+  /* 실전 문장 */
+  .sent-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px; cursor:pointer}
+  .sent-card .src{font-size:.75rem; color:var(--sub); margin-bottom:6px}
+  .sent-card .en{font-weight:600}
+  .sent-card .ko{margin-top:8px; color:var(--sub); font-size:.9rem; display:none}
+  .sent-card.open .ko{display:block}
+  .sent-card .tap{font-size:.75rem; color:var(--blue); margin-top:6px}
+  /* 진도 */
+  .progress-bar{background:var(--line); border-radius:99px; height:8px; overflow:hidden; margin:6px 0 2px}
+  .progress-fill{background:var(--green); height:100%; transition:width .3s}
+  .prog-box{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 16px; margin-bottom:14px; font-size:.85rem; color:var(--sub)}
+  footer{text-align:center; color:var(--sub); font-size:.78rem; padding:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>📈 미국주식 영어 마스터</h1>
+  <p>초급부터 고급까지 — 실제 사이트·뉴스·실적발표에서 쓰는 영어</p>
+  <p style="font-size:.75rem; opacity:.7; margin-top:6px">용어 출처: Yahoo Finance · Finviz · stockanalysis.com 실제 화면 + SEC 공시·실적발표·IRS 세금 규정 표준 용어 (2026-07-16 확인)</p>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="on" data-mode="study">📖 학습</button>
+    <button data-mode="daily">🗓️ 오늘의 5단어</button>
+    <button data-mode="flash">🃏 플래시카드</button>
+    <button data-mode="quiz">✏️ 퀴즈</button>
+    <button data-mode="sent">📰 실전 문장</button>
+  </div>
+
+  <div class="prog-box" id="progBox"></div>
+
+  <div class="filters" id="filterZone">
+    <span class="chip lvchip on" data-lv="0">전체</span>
+    <span class="chip lvchip" data-lv="1">🟢 초급</span>
+    <span class="chip lvchip" data-lv="2">🟡 중급</span>
+    <span class="chip lvchip" data-lv="3">🟣 고급</span>
+    <input id="search" type="text" placeholder="단어·뜻 검색...">
+  </div>
+  <div class="filters" id="catZone"></div>
+
+  <div class="count" id="countInfo"></div>
+  <div id="content"></div>
+</div>
+
+<footer>클릭해서 뜻 확인 · 외운 단어는 ✓ 체크 (자동 저장) · 데이터는 이 컴퓨터에만 저장됩니다</footer>
+
+<script>
+// ============ 용어 데이터 ============
+// lv: 1=초급 2=중급 3=고급
+const TERMS = [
+// ---------- 초급 · 기초 ----------
+{en:"stock / share", ko:"주식 / 1주", desc:"stock은 주식 전반, share는 셀 수 있는 '주(株)' 단위. own 100 shares = 100주 보유.", ex:"I bought 10 shares of Apple stock.", exKo:"애플 주식 10주를 샀어요.", lv:1, cat:"기초"},
+{en:"ticker (symbol)", ko:"종목 코드", desc:"거래소에서 쓰는 종목 약자. 애플=AAPL, 테슬라=TSLA, 마이크로소프트=MSFT.", ex:"Search by ticker symbol: AAPL.", exKo:"종목 코드 AAPL로 검색하세요.", lv:1, cat:"기초"},
+{en:"exchange", ko:"거래소", desc:"주식이 거래되는 시장. 미국의 양대 거래소는 NYSE(뉴욕증권거래소)와 Nasdaq(나스닥).", ex:"Tesla is listed on the Nasdaq exchange.", exKo:"테슬라는 나스닥 거래소에 상장돼 있어요.", lv:1, cat:"기초"},
+{en:"index", ko:"지수", desc:"시장 전체 흐름을 보여주는 숫자. 3대 지수: Dow Jones(다우), S&P 500, Nasdaq Composite.", ex:"The S&P 500 index closed at a record high.", exKo:"S&P 500 지수가 사상 최고치로 마감했어요.", lv:1, cat:"기초"},
+{en:"ETF", ko:"상장지수펀드", desc:"Exchange-Traded Fund. 여러 종목을 묶어 주식처럼 사고파는 펀드. 대표: SPY, QQQ, VOO.", ex:"ETFs are a simple way to diversify.", exKo:"ETF는 분산투자하는 간단한 방법이에요.", lv:1, cat:"기초"},
+{en:"dividend", ko:"배당금", desc:"회사가 이익 일부를 주주에게 현금으로 나눠주는 것. 배당주 = dividend stock.", ex:"Coca-Cola pays a quarterly dividend.", exKo:"코카콜라는 분기마다 배당금을 지급해요.", lv:1, cat:"기초"},
+{en:"portfolio", ko:"포트폴리오", desc:"내가 보유한 종목 전체 목록. 증권사 앱의 'Portfolio' 탭에서 내 보유 현황을 봄.", ex:"Check your portfolio performance in the app.", exKo:"앱에서 포트폴리오 수익률을 확인하세요.", lv:1, cat:"기초"},
+{en:"broker / brokerage", ko:"증권사", desc:"주식 매매를 중개하는 회사. 미국은 Robinhood, Fidelity, Charles Schwab 등.", ex:"Open a brokerage account to start investing.", exKo:"투자를 시작하려면 증권 계좌를 개설하세요.", lv:1, cat:"기초"},
+{en:"IPO", ko:"기업공개 / 상장", desc:"Initial Public Offering. 회사가 처음 주식시장에 상장하는 것.", ex:"The company went public in a $2 billion IPO.", exKo:"그 회사는 20억 달러 규모 IPO로 상장했어요.", lv:1, cat:"기초"},
+{en:"blue chip", ko:"우량주", desc:"크고 안정적인 대형 우량 기업 주식. 애플, 마이크로소프트, 존슨앤드존슨 등.", ex:"Blue-chip stocks are considered safer investments.", exKo:"우량주는 비교적 안전한 투자로 여겨져요.", lv:1, cat:"기초"},
+{en:"sector", ko:"섹터 / 업종", desc:"산업 분류. Technology(기술), Healthcare(헬스케어), Energy(에너지), Financials(금융) 등 11개 섹터.", ex:"The tech sector led today's gains.", exKo:"오늘 상승은 기술 섹터가 주도했어요.", lv:1, cat:"기초"},
+{en:"watchlist", ko:"관심종목", desc:"사기 전에 지켜보는 종목 목록. 증권사 앱의 기본 기능.", ex:"Add NVDA to your watchlist.", exKo:"엔비디아를 관심종목에 추가하세요.", lv:1, cat:"기초"},
+{en:"quote", ko:"시세 / 호가", desc:"현재 주가 정보. 'Get quote'는 시세 조회하기.", ex:"Real-time quotes are delayed by 15 minutes for free users.", exKo:"무료 사용자는 실시간 시세가 15분 지연돼요.", lv:1, cat:"기초"},
+// ---------- 초급 · 거래 ----------
+{en:"buy / sell", ko:"매수 / 매도", desc:"주식을 사는 것(buy), 파는 것(sell). 증권 앱의 가장 기본 버튼.", ex:"Tap 'Buy' to place your first order.", exKo:"'매수'를 눌러 첫 주문을 넣으세요.", lv:1, cat:"거래"},
+{en:"open / close", ko:"시가 / 종가", desc:"open(시가)=장 시작 가격, close(종가)=장 마감 가격. 미국 정규장: 9:30am~4:00pm(동부시간).", ex:"The stock opened at $150 and closed at $155.", exKo:"주가가 150달러로 시작해 155달러로 마감했어요.", lv:1, cat:"거래"},
+{en:"high / low", ko:"고가 / 저가", desc:"하루 중 가장 높았던 가격(high)과 낮았던 가격(low). day's range = 당일 가격 범위.", ex:"Today's range: low $148.20 – high $153.75.", exKo:"오늘 가격 범위: 저가 148.20 ~ 고가 153.75달러.", lv:1, cat:"거래"},
+{en:"previous close", ko:"전일 종가", desc:"어제 장 마감 가격. 오늘 등락률(%)의 기준이 되는 값.", ex:"The stock is up 2% from the previous close.", exKo:"주가가 전일 종가 대비 2% 올랐어요.", lv:1, cat:"거래"},
+{en:"volume", ko:"거래량", desc:"하루 동안 거래된 주식 수. 거래량이 많으면 관심이 집중됐다는 신호.", ex:"Trading volume spiked after the news.", exKo:"뉴스가 나온 뒤 거래량이 급증했어요.", lv:1, cat:"거래"},
+{en:"market cap", ko:"시가총액", desc:"Market capitalization. 주가 × 발행주식수 = 회사의 시장 가치. Large-cap(대형주), Mid-cap(중형주), Small-cap(소형주).", ex:"Apple's market cap exceeds $3 trillion.", exKo:"애플의 시가총액은 3조 달러가 넘어요.", lv:1, cat:"거래"},
+{en:"gain / loss", ko:"수익 / 손실", desc:"번 돈(gain)과 잃은 돈(loss). unrealized gain = 아직 안 판 평가이익.", ex:"You have an unrealized gain of $500.", exKo:"평가이익이 500달러예요.", lv:1, cat:"거래"},
+{en:"fractional shares", ko:"소수점 주식", desc:"1주 미만으로 쪼개서 사는 것. 비싼 주식도 10달러어치만 살 수 있음.", ex:"Buy fractional shares with as little as $1.", exKo:"1달러부터 소수점 주식을 살 수 있어요.", lv:1, cat:"거래"},
+// ---------- 초급 · 시장 ----------
+{en:"bull market", ko:"강세장 (상승장)", desc:"주가가 계속 오르는 시장. bull(황소)이 뿔로 위로 들이받는 모습에서 유래. bullish = 낙관적인.", ex:"We've been in a bull market for two years.", exKo:"2년째 강세장이 이어지고 있어요.", lv:1, cat:"시장·경제"},
+{en:"bear market", ko:"약세장 (하락장)", desc:"고점 대비 20% 이상 하락한 시장. bear(곰)가 발톱으로 내리찍는 모습에서 유래. bearish = 비관적인.", ex:"The Nasdaq entered a bear market in 2022.", exKo:"나스닥은 2022년 약세장에 진입했어요.", lv:1, cat:"시장·경제"},
+{en:"rally", ko:"랠리 / 급등", desc:"주가가 힘차게 오르는 것. relief rally = 안도 랠리.", ex:"Stocks rallied after the Fed's announcement.", exKo:"연준 발표 후 주가가 급등했어요.", lv:1, cat:"시장·경제"},
+{en:"rise / fall, up / down", ko:"오르다 / 내리다", desc:"뉴스 기본 표현. climb, jump, surge, soar(급등) / drop, slide, tumble, plunge(급락)도 자주 나옴.", ex:"Shares rose 3% in early trading.", exKo:"장 초반 주가가 3% 올랐어요.", lv:1, cat:"시장·경제"},
+{en:"52-week high / low", ko:"52주 최고가 / 최저가", desc:"최근 1년간 가장 높았던/낮았던 가격. 종목 정보 화면의 필수 항목.", ex:"The stock hit a new 52-week high today.", exKo:"주가가 오늘 52주 신고가를 기록했어요.", lv:1, cat:"시장·경제"},
+{en:"all-time high (ATH)", ko:"사상 최고가", desc:"역사상 가장 높은 가격. 뉴스 헤드라인 단골 표현.", ex:"Nvidia notched another all-time high.", exKo:"엔비디아가 또다시 사상 최고가를 찍었어요.", lv:1, cat:"시장·경제"},
+{en:"flat", ko:"보합", desc:"거의 변동 없는 상태. 'trade flat' = 보합세로 거래되다.", ex:"The market ended flat on Friday.", exKo:"금요일 시장은 보합으로 마감했어요.", lv:1, cat:"시장·경제"},
+// ---------- 중급 · 거래 ----------
+{en:"market order", ko:"시장가 주문", desc:"지금 가격에 즉시 사고파는 주문. 빠르지만 체결 가격을 정할 수 없음.", ex:"A market order executes immediately at the current price.", exKo:"시장가 주문은 현재 가격에 즉시 체결돼요.", lv:2, cat:"거래"},
+{en:"limit order", ko:"지정가 주문", desc:"내가 정한 가격에만 사고파는 주문. 'Buy limit $150' = 150달러 이하일 때만 매수.", ex:"Set a limit order at $145 to buy the dip.", exKo:"저점 매수를 위해 145달러에 지정가 주문을 걸어두세요.", lv:2, cat:"거래"},
+{en:"stop-loss (order)", ko:"손절매 주문", desc:"주가가 정한 가격 아래로 떨어지면 자동 매도해 손실을 제한하는 주문.", ex:"Place a stop-loss at 10% below your buy price.", exKo:"매수가보다 10% 아래에 손절매를 걸어두세요.", lv:2, cat:"거래"},
+{en:"pre-market / after-hours", ko:"장전 / 장후 거래", desc:"정규장 전(4:00~9:30am)과 후(4:00~8:00pm)의 시간외 거래. 실적 발표 반응이 주로 여기서 나옴.", ex:"The stock jumped 8% in after-hours trading.", exKo:"주가가 시간외 거래에서 8% 급등했어요.", lv:2, cat:"거래"},
+{en:"bid / ask", ko:"매수호가 / 매도호가", desc:"bid=사려는 사람이 부르는 가격, ask=팔려는 사람이 부르는 가격. 그 차이가 spread(스프레드).", ex:"The bid-ask spread is wider for small-cap stocks.", exKo:"소형주는 매수·매도 호가 차이가 더 커요.", lv:2, cat:"거래"},
+{en:"short selling", ko:"공매도", desc:"주식을 빌려서 판 뒤 싸게 되사서 갚는, 하락에 베팅하는 전략. short a stock = 공매도하다.", ex:"Short sellers lost billions on the GameStop rally.", exKo:"공매도 세력이 게임스탑 급등으로 수십억 달러를 잃었어요.", lv:2, cat:"거래"},
+{en:"margin", ko:"신용거래 / 증거금", desc:"증권사에서 돈을 빌려 투자하는 것. margin call = 담보 부족으로 추가 입금 요구.", ex:"Trading on margin amplifies both gains and losses.", exKo:"신용거래는 수익과 손실을 모두 키워요.", lv:2, cat:"거래"},
+{en:"stock split", ko:"액면분할", desc:"1주를 여러 주로 쪼개는 것. 10-for-1 split = 1주가 10주로. 가격이 저렴해져 접근성이 좋아짐.", ex:"Nvidia announced a 10-for-1 stock split.", exKo:"엔비디아가 10대 1 액면분할을 발표했어요.", lv:2, cat:"거래"},
+{en:"ex-dividend date", ko:"배당락일", desc:"이 날짜 이후 사면 이번 배당을 못 받는 기준일. 배당 받으려면 전날까지 매수.", ex:"Buy before the ex-dividend date to receive the payout.", exKo:"배당을 받으려면 배당락일 전에 매수하세요.", lv:2, cat:"거래"},
+{en:"holdings / position", ko:"보유 종목 / 포지션", desc:"보유 중인 자산. 'open a position' = 신규 매수, 'close a position' = 전량 매도.", ex:"He closed his position in Tesla last week.", exKo:"그는 지난주 테슬라 포지션을 정리했어요.", lv:2, cat:"거래"},
+// ---------- 중급 · 재무/실적 ----------
+{en:"earnings", ko:"실적 / 이익", desc:"기업의 분기 실적. earnings report(실적 보고서), earnings season(실적 시즌), earnings call(실적발표 컨퍼런스콜).", ex:"Apple reports earnings after the bell on Thursday.", exKo:"애플은 목요일 장 마감 후 실적을 발표해요.", lv:2, cat:"재무·실적"},
+{en:"EPS", ko:"주당순이익", desc:"Earnings Per Share. 순이익 ÷ 주식수. 실적 발표의 핵심 숫자 중 하나.", ex:"The company reported EPS of $2.18, beating estimates.", exKo:"회사가 주당순이익 2.18달러를 발표하며 예상치를 웃돌았어요.", lv:2, cat:"재무·실적"},
+{en:"revenue (top line)", ko:"매출", desc:"회사가 벌어들인 총 금액. 손익계산서 맨 윗줄이라 'top line'이라고도 부름. sales와 같은 뜻.", ex:"Revenue grew 15% year over year to $90 billion.", exKo:"매출이 전년 대비 15% 늘어난 900억 달러를 기록했어요.", lv:2, cat:"재무·실적"},
+{en:"net income (bottom line)", ko:"순이익", desc:"비용을 모두 빼고 남은 최종 이익. 손익계산서 맨 아랫줄이라 'bottom line'.", ex:"Net income doubled from a year ago.", exKo:"순이익이 1년 전보다 두 배가 됐어요.", lv:2, cat:"재무·실적"},
+{en:"beat / miss (estimates)", ko:"예상치 상회 / 하회", desc:"실적이 애널리스트 예상(estimates, consensus)보다 좋으면 beat, 나쁘면 miss. 주가를 크게 움직이는 요인.", ex:"Tesla missed on revenue but beat on EPS.", exKo:"테슬라는 매출은 예상을 밑돌았지만 EPS는 웃돌았어요.", lv:2, cat:"재무·실적"},
+{en:"guidance", ko:"(실적) 가이던스", desc:"회사가 직접 제시하는 다음 분기·연간 실적 전망. raise/cut guidance = 전망 상향/하향.", ex:"The company raised its full-year guidance.", exKo:"회사가 연간 실적 전망을 상향했어요.", lv:2, cat:"재무·실적"},
+{en:"P/E ratio", ko:"주가수익비율 (PER)", desc:"Price-to-Earnings. 주가 ÷ 주당순이익. 이익 대비 주가가 몇 배인지 — 높으면 고평가 가능성.", ex:"The stock trades at a P/E of 25.", exKo:"이 주식은 PER 25배에 거래되고 있어요.", lv:2, cat:"재무·실적"},
+{en:"dividend yield", ko:"배당수익률", desc:"연간 배당금 ÷ 주가 × 100. 은행 이자율처럼 배당의 수익률을 보는 지표.", ex:"The stock offers a 4% dividend yield.", exKo:"이 주식의 배당수익률은 4%예요.", lv:2, cat:"재무·실적"},
+{en:"profit margin", ko:"이익률", desc:"매출 중 이익의 비율. gross margin(매출총이익률), operating margin(영업이익률), net margin(순이익률).", ex:"Software companies enjoy high profit margins.", exKo:"소프트웨어 기업들은 이익률이 높아요.", lv:2, cat:"재무·실적"},
+{en:"outlook", ko:"전망", desc:"앞으로의 실적·경기 전망. positive/negative outlook. guidance와 비슷하지만 더 넓은 의미.", ex:"Management gave a cautious outlook for next quarter.", exKo:"경영진이 다음 분기에 대해 신중한 전망을 내놨어요.", lv:2, cat:"재무·실적"},
+// ---------- 중급 · 시장/분석 ----------
+{en:"volatility", ko:"변동성", desc:"주가가 오르내리는 폭. VIX 지수 = 시장 공포지수. volatile = 변동성이 큰.", ex:"Expect higher volatility during earnings season.", exKo:"실적 시즌에는 변동성이 커질 것으로 예상하세요.", lv:2, cat:"시장·경제"},
+{en:"correction", ko:"조정", desc:"고점 대비 10~20% 하락. 20% 넘으면 bear market. 건강한 조정 = healthy correction.", ex:"The index slipped into correction territory.", exKo:"지수가 조정 국면에 진입했어요.", lv:2, cat:"시장·경제"},
+{en:"buy the dip", ko:"저점 매수", desc:"주가가 떨어졌을 때(dip) 사는 전략. 미국 개미 투자자들의 유행어 BTD.", ex:"Retail investors bought the dip aggressively.", exKo:"개인 투자자들이 공격적으로 저점 매수에 나섰어요.", lv:2, cat:"시장·경제"},
+{en:"upgrade / downgrade", ko:"투자의견 상향 / 하향", desc:"애널리스트가 종목 평가를 올리거나 내리는 것. Buy/Hold/Sell 등급 사이를 오감.", ex:"Morgan Stanley upgraded the stock to Buy.", exKo:"모건스탠리가 이 종목의 투자의견을 '매수'로 상향했어요.", lv:2, cat:"시장·경제"},
+{en:"price target (PT)", ko:"목표주가", desc:"애널리스트가 제시하는 적정 주가. raise/cut price target = 목표주가 상향/하향.", ex:"Analysts raised their price target to $250.", exKo:"애널리스트들이 목표주가를 250달러로 올렸어요.", lv:2, cat:"시장·경제"},
+{en:"outperform / underperform", ko:"시장수익률 상회 / 하회", desc:"시장(지수) 대비 더 좋은/나쁜 성과. 애널리스트 등급으로도 쓰임.", ex:"Small caps underperformed the S&P 500 this year.", exKo:"올해 소형주는 S&P 500보다 부진했어요.", lv:2, cat:"시장·경제"},
+{en:"support / resistance", ko:"지지선 / 저항선", desc:"주가가 잘 안 떨어지는 바닥(support)과 잘 못 뚫는 천장(resistance). 차트 분석의 기본.", ex:"The stock bounced off support at $100.", exKo:"주가가 100달러 지지선에서 반등했어요.", lv:2, cat:"차트·분석"},
+{en:"moving average (MA)", ko:"이동평균선", desc:"일정 기간 평균 주가를 이은 선. 50-day/200-day MA가 대표적. golden cross = 골든크로스.", ex:"The stock broke above its 200-day moving average.", exKo:"주가가 200일 이동평균선을 상향 돌파했어요.", lv:2, cat:"차트·분석"},
+{en:"breakout", ko:"돌파", desc:"저항선을 뚫고 올라가는 것. break below = 하향 이탈.", ex:"Traders are watching for a breakout above $200.", exKo:"트레이더들이 200달러 상향 돌파를 주시하고 있어요.", lv:2, cat:"차트·분석"},
+{en:"uptrend / downtrend", ko:"상승 추세 / 하락 추세", desc:"주가의 큰 방향. 'The trend is your friend' = 추세를 거스르지 마라.", ex:"The stock remains in a long-term uptrend.", exKo:"주가는 장기 상승 추세를 유지하고 있어요.", lv:2, cat:"차트·분석"},
+// ---------- 고급 · 재무/공시 ----------
+{en:"10-K / 10-Q", ko:"연간 / 분기 보고서", desc:"SEC에 제출하는 공식 실적 보고서. 10-K=연간(가장 상세), 10-Q=분기. 기업 분석의 원천 자료.", ex:"Read the risk factors section in the 10-K.", exKo:"10-K의 위험 요인 섹션을 읽어보세요.", lv:3, cat:"재무·실적"},
+{en:"8-K / SEC filing", ko:"수시공시 / 공시 자료", desc:"8-K는 중요 사건 발생 시 내는 수시공시. filing=공시 제출물. SEC 사이트(EDGAR)에서 무료 열람.", ex:"The merger was disclosed in an 8-K filing.", exKo:"합병 소식이 8-K 공시로 발표됐어요.", lv:3, cat:"재무·실적"},
+{en:"balance sheet", ko:"대차대조표 (재무상태표)", desc:"자산(assets), 부채(liabilities), 자본(equity)을 보여주는 재무제표.", ex:"The company has a strong balance sheet with little debt.", exKo:"이 회사는 부채가 적고 재무구조가 탄탄해요.", lv:3, cat:"재무·실적"},
+{en:"income statement", ko:"손익계산서", desc:"매출부터 순이익까지 수익성을 보여주는 재무제표. P&L(Profit & Loss)이라고도 함.", ex:"The income statement shows declining margins.", exKo:"손익계산서를 보면 이익률이 하락하고 있어요.", lv:3, cat:"재무·실적"},
+{en:"cash flow statement", ko:"현금흐름표", desc:"실제 현금의 유출입. operating(영업)/investing(투자)/financing(재무) 활동으로 구분.", ex:"Check the cash flow statement, not just net income.", exKo:"순이익만 보지 말고 현금흐름표도 확인하세요.", lv:3, cat:"재무·실적"},
+{en:"free cash flow (FCF)", ko:"잉여현금흐름", desc:"영업현금흐름 - 설비투자. 회사가 실제로 자유롭게 쓸 수 있는 현금. 배당·자사주매입의 원천.", ex:"Apple generates over $100 billion in free cash flow annually.", exKo:"애플은 연간 1,000억 달러가 넘는 잉여현금흐름을 창출해요.", lv:3, cat:"재무·실적"},
+{en:"YoY / QoQ", ko:"전년 대비 / 전분기 대비", desc:"Year-over-Year, Quarter-over-Quarter. 실적 비교의 기준. 'up 20% YoY' = 전년 동기 대비 20% 증가.", ex:"Revenue increased 12% YoY but fell 3% QoQ.", exKo:"매출이 전년 대비 12% 늘었지만 전분기 대비 3% 줄었어요.", lv:3, cat:"재무·실적"},
+{en:"ROE", ko:"자기자본이익률", desc:"Return on Equity. 순이익 ÷ 자기자본. 주주 돈으로 얼마나 효율적으로 이익을 내는지.", ex:"A consistently high ROE signals a quality business.", exKo:"꾸준히 높은 ROE는 우량 기업의 신호예요.", lv:3, cat:"재무·실적"},
+{en:"buyback (share repurchase)", ko:"자사주 매입", desc:"회사가 자기 주식을 사들여 주식수를 줄이는 것. 주당 가치가 올라가 주주 환원책으로 꼽힘.", ex:"The board approved a $90 billion buyback program.", exKo:"이사회가 900억 달러 규모 자사주 매입을 승인했어요.", lv:3, cat:"재무·실적"},
+{en:"dilution", ko:"(주식) 희석", desc:"신주 발행으로 기존 주주의 지분 가치가 줄어드는 것. 스톡옵션·유상증자가 원인.", ex:"Heavy stock-based compensation causes shareholder dilution.", exKo:"과도한 주식 보상은 주주 가치 희석을 일으켜요.", lv:3, cat:"재무·실적"},
+{en:"forward P/E", ko:"선행 PER", desc:"미래 예상 이익 기준의 PER. trailing P/E(과거 실적 기준)와 대비되는 개념.", ex:"The stock looks cheaper on a forward P/E basis.", exKo:"선행 PER 기준으로는 주가가 더 싸 보여요.", lv:3, cat:"재무·실적"},
+{en:"moat", ko:"경제적 해자", desc:"경쟁사가 넘보기 힘든 지속적 경쟁우위. 워런 버핏이 유행시킨 용어. wide moat = 강력한 해자.", ex:"Buffett looks for companies with a durable moat.", exKo:"버핏은 지속 가능한 해자를 가진 기업을 찾아요.", lv:3, cat:"재무·실적"},
+// ---------- 고급 · 시장/거시 ----------
+{en:"the Fed / FOMC", ko:"연방준비제도 / 연방공개시장위원회", desc:"미국 중앙은행(Fed)과 금리를 결정하는 회의(FOMC). 연 8회 회의가 시장 최대 이벤트.", ex:"The Fed kept interest rates unchanged at the FOMC meeting.", exKo:"연준이 FOMC 회의에서 금리를 동결했어요.", lv:3, cat:"시장·경제"},
+{en:"rate hike / rate cut", ko:"금리 인상 / 인하", desc:"기준금리 조정. 인상=주식에 부담, 인하=주식에 호재인 경우가 많음. basis point(bp)=0.01%.", ex:"Markets are pricing in two rate cuts this year.", exKo:"시장은 올해 두 차례 금리 인하를 반영하고 있어요.", lv:3, cat:"시장·경제"},
+{en:"hawkish / dovish", ko:"매파적 / 비둘기파적", desc:"hawkish=긴축(금리인상) 선호, dovish=완화(금리인하) 선호. 연준 발언 해석의 핵심 단어.", ex:"Powell's dovish comments sent stocks higher.", exKo:"파월의 비둘기파적 발언에 주가가 올랐어요.", lv:3, cat:"시장·경제"},
+{en:"CPI / inflation", ko:"소비자물가지수 / 인플레이션", desc:"물가 상승률 지표. 매달 발표되며 금리 방향을 좌우해 시장이 민감하게 반응.", ex:"The CPI report came in hotter than expected.", exKo:"CPI가 예상보다 높게 나왔어요.", lv:3, cat:"시장·경제"},
+{en:"recession / soft landing", ko:"경기침체 / 연착륙", desc:"recession=경기침체(GDP 2분기 연속 감소), soft landing=침체 없이 물가만 잡는 이상적 시나리오.", ex:"Economists debate whether a soft landing is achievable.", exKo:"경제학자들이 연착륙 가능 여부를 두고 논쟁 중이에요.", lv:3, cat:"시장·경제"},
+{en:"quantitative easing (QE)", ko:"양적완화", desc:"중앙은행이 채권을 사들여 시중에 돈을 푸는 정책. 반대는 QT(quantitative tightening, 양적긴축).", ex:"QE flooded the market with liquidity.", exKo:"양적완화로 시장에 유동성이 넘쳐났어요.", lv:3, cat:"시장·경제"},
+{en:"Treasury yield", ko:"미국 국채 금리", desc:"미 국채 수익률. 10-year Treasury yield(10년물 금리)는 전 세계 자산 가격의 기준.", ex:"The 10-year Treasury yield topped 4.5%.", exKo:"10년물 국채 금리가 4.5%를 넘었어요.", lv:3, cat:"시장·경제"},
+{en:"short squeeze", ko:"숏 스퀴즈", desc:"공매도 세력이 손실을 줄이려 급히 되사면서 주가가 폭등하는 현상. 게임스탑 사태가 대표 사례.", ex:"A short squeeze drove the stock up 300% in days.", exKo:"숏 스퀴즈로 주가가 며칠 만에 300% 폭등했어요.", lv:3, cat:"시장·경제"},
+{en:"circuit breaker", ko:"서킷브레이커", desc:"급락 시 거래를 일시 중단하는 안전장치. S&P 500이 7%/13%/20% 떨어지면 발동.", ex:"Circuit breakers halted trading during the 2020 crash.", exKo:"2020년 폭락 때 서킷브레이커가 거래를 중단시켰어요.", lv:3, cat:"시장·경제"},
+{en:"institutional investors", ko:"기관 투자자", desc:"연기금, 뮤추얼펀드, 헤지펀드 등 큰손. 반대는 retail investors(개인 투자자).", ex:"Institutional investors own 60% of the float.", exKo:"기관 투자자가 유통주식의 60%를 보유하고 있어요.", lv:3, cat:"시장·경제"},
+{en:"insider buying / selling", ko:"내부자 매수 / 매도", desc:"임원·대주주의 자사주 거래. 내부자 매수는 긍정 신호로 해석되곤 함. SEC 공시(Form 4) 의무.", ex:"The CEO's insider buying boosted investor confidence.", exKo:"CEO의 내부자 매수가 투자자 신뢰를 높였어요.", lv:3, cat:"시장·경제"},
+// ---------- 고급 · 옵션/파생 ----------
+{en:"options (call / put)", ko:"옵션 (콜 / 풋)", desc:"call=살 권리(상승 베팅), put=팔 권리(하락 베팅·보험). 미국 시장에서 매우 활발.", ex:"He bought call options betting on a rally.", exKo:"그는 상승에 베팅해 콜옵션을 샀어요.", lv:3, cat:"거래"},
+{en:"strike price", ko:"행사가격", desc:"옵션을 행사할 때 적용되는 약속된 가격. in-the-money(수익 구간), out-of-the-money(손실 구간).", ex:"The $200 strike calls expire this Friday.", exKo:"행사가 200달러 콜옵션이 이번 금요일에 만기예요.", lv:3, cat:"거래"},
+{en:"expiration (date)", ko:"만기(일)", desc:"옵션 효력이 끝나는 날. triple witching = 선물·옵션 동시 만기일(변동성 급증).", ex:"Volatility spikes near options expiration.", exKo:"옵션 만기가 가까워지면 변동성이 커져요.", lv:3, cat:"거래"},
+{en:"hedge / hedging", ko:"헤지 / 위험 회피", desc:"손실 위험을 줄이는 보험성 거래. 풋옵션 매수, 반대 포지션 등. hedge fund의 어원.", ex:"Investors hedge their portfolios with put options.", exKo:"투자자들은 풋옵션으로 포트폴리오를 헤지해요.", lv:3, cat:"거래"},
+{en:"leverage", ko:"레버리지", desc:"빚이나 파생상품으로 투자 규모를 키우는 것. 2x/3x leveraged ETF = 2배/3배 레버리지 ETF.", ex:"Leveraged ETFs are designed for short-term trading only.", exKo:"레버리지 ETF는 단기 트레이딩용으로만 설계됐어요.", lv:3, cat:"거래"},
+// ---------- 실제 사이트 화면에서 수집한 용어 (2026-07-16 확인) ----------
+{en:"YTD", ko:"연초 대비", desc:"Year-To-Date. 올해 1월 1일부터 지금까지의 수익률. Finviz의 'Perf YTD', Yahoo의 'YTD Return' 항목.", ex:"The stock is up 24% YTD.", exKo:"이 주식은 연초 대비 24% 올랐어요.", lv:1, cat:"기초", src:"Yahoo Finance · Finviz 종목 화면"},
+{en:"earnings date", ko:"실적 발표일", desc:"다음 분기 실적이 발표되는 날짜. Yahoo Finance 종목 화면 기본 항목 — 이날 전후로 주가가 크게 움직임.", ex:"Earnings Date: Jul 31, 2026 (after market close)", exKo:"실적 발표일: 2026년 7월 31일 (장 마감 후)", lv:1, cat:"기초", src:"Yahoo Finance 종목 화면"},
+{en:"gainers / losers", ko:"상승 종목 / 하락 종목", desc:"그날 가장 많이 오른/내린 종목 목록. 'Day Gainers', 'Top Losers', 'Trending Tickers' 메뉴로 표시됨.", ex:"Check today's top gainers and losers.", exKo:"오늘의 상승률·하락률 상위 종목을 확인하세요.", lv:1, cat:"시장·경제", src:"Yahoo Finance 마켓 메뉴"},
+{en:"avg volume / relative volume", ko:"평균 거래량 / 상대 거래량", desc:"Avg. Volume=평소 하루 평균 거래량. Rel Volume=오늘 거래량÷평균 (1.0보다 크면 평소보다 활발).", ex:"Relative volume of 3.5 means unusually heavy trading.", exKo:"상대 거래량 3.5는 평소보다 매우 활발한 거래라는 뜻이에요.", lv:2, cat:"거래", src:"Yahoo Finance · Finviz 종목 화면"},
+{en:"beta", ko:"베타 (시장 민감도)", desc:"시장(S&P 500)이 1% 움직일 때 이 종목이 얼마나 움직이는지. 1보다 크면 시장보다 변동 큼. Yahoo 표기: Beta (5Y Monthly).", ex:"A beta of 1.3 means the stock is 30% more volatile than the market.", exKo:"베타 1.3은 시장보다 30% 더 크게 움직인다는 뜻이에요.", lv:2, cat:"차트·분석", src:"Yahoo Finance · Finviz 종목 화면"},
+{en:"TTM / MRQ", ko:"최근 12개월 / 최근 분기", desc:"Trailing Twelve Months / Most Recent Quarter. 'EPS (ttm)', 'Price/Book (mrq)'처럼 지표 옆에 붙는 기간 표시.", ex:"Revenue (ttm): $391.04B", exKo:"최근 12개월 매출: 3,910억 4천만 달러", lv:2, cat:"재무·실적", src:"Yahoo Finance 통계 화면"},
+{en:"shares outstanding", ko:"발행 주식수", desc:"시장에 발행된 총 주식수. Finviz 표기 'Shs Outstand'. 시가총액 = 주가 × 발행주식수.", ex:"Apple has about 15 billion shares outstanding.", exKo:"애플의 발행 주식수는 약 150억 주예요.", lv:2, cat:"재무·실적", src:"Finviz · stockanalysis.com"},
+{en:"payout ratio", ko:"배당성향", desc:"순이익 중 배당으로 지급하는 비율. Finviz 표기 'Payout'. 너무 높으면(80%+) 배당 유지가 어려울 수 있음.", ex:"A payout ratio above 100% is unsustainable.", exKo:"배당성향이 100%를 넘으면 지속 불가능해요.", lv:2, cat:"재무·실적", src:"Finviz 종목 화면"},
+{en:"analyst consensus / Recom", ko:"애널리스트 종합 의견", desc:"여러 애널리스트 의견의 평균. Strong Buy > Buy > Hold > Sell 등급. Finviz는 'Recom' 숫자(1=강력매수~5=매도)로 표시.", ex:"Analyst Consensus: Buy (32 analysts)", exKo:"애널리스트 종합 의견: 매수 (32명 기준)", lv:2, cat:"시장·경제", src:"stockanalysis.com · Finviz"},
+{en:"futures", ko:"(지수) 선물", desc:"장 시작 전 시장 방향을 미리 보여주는 선물 가격. 'S&P Futures', 'Dow Futures'가 마켓 페이지 최상단에 항상 표시됨.", ex:"S&P 500 futures point to a higher open.", exKo:"S&P 500 선물이 상승 출발을 예고하고 있어요.", lv:2, cat:"시장·경제", src:"Yahoo Finance · CNBC 마켓 페이지"},
+{en:"VIX", ko:"변동성 지수 (공포 지수)", desc:"시장의 불안 정도를 나타내는 지수. 20 이하=안정, 30 이상=공포. 마켓 페이지 상단 고정 지표.", ex:"The VIX spiked above 30 as stocks tumbled.", exKo:"주가 급락에 VIX가 30을 넘어섰어요.", lv:2, cat:"시장·경제", src:"Yahoo Finance 마켓 페이지"},
+{en:"sell-off", ko:"매도세 / 투매", desc:"주가가 큰 폭으로 떨어지는 집중 매도. 뉴스 헤드라인 단골 표현. broad sell-off = 전반적 급락.", ex:"Tech stocks led a broad market sell-off.", exKo:"기술주가 시장 전반의 매도세를 주도했어요.", lv:2, cat:"시장·경제", src:"금융 뉴스 헤드라인"},
+{en:"catalyst", ko:"촉매 (주가 상승/하락 계기)", desc:"주가를 움직일 재료·사건. 실적 발표, 신제품, FDA 승인 등. 애널리스트 리포트 필수 단어.", ex:"Wall Street weighs the next catalyst for the AI trade.", exKo:"월가가 AI 관련주의 다음 촉매를 저울질하고 있어요. (2026-07-16 실제 헤드라인)", lv:2, cat:"시장·경제", src:"Yahoo Finance 뉴스 헤드라인 (2026-07-16)"},
+{en:"RSI", ko:"상대강도지수", desc:"Relative Strength Index. 과매수/과매도를 보는 지표(0~100). 70 이상=과매수, 30 이하=과매도. Finviz 표기 'RSI (14)'.", ex:"An RSI above 70 suggests the stock is overbought.", exKo:"RSI가 70을 넘으면 과매수 상태로 봐요.", lv:2, cat:"차트·분석", src:"Finviz · TradingView"},
+{en:"PEG ratio", ko:"주가수익성장비율", desc:"PER ÷ 이익성장률. 성장 속도까지 감안한 밸류에이션. 1 이하면 성장 대비 저평가로 봄.", ex:"A PEG ratio below 1 may indicate undervaluation.", exKo:"PEG가 1 이하면 저평가일 수 있어요.", lv:3, cat:"재무·실적", src:"Yahoo Finance · Finviz"},
+{en:"P/S · P/B", ko:"주가매출비율 · 주가순자산비율", desc:"Price/Sales(매출 대비 주가 — 적자 기업 평가용), Price/Book(순자산 대비 주가 — 1 이하면 청산가치 미만).", ex:"The startup trades at a P/S of 15 — pricey for its growth.", exKo:"이 스타트업은 P/S 15배 — 성장 대비 비싼 편이에요.", lv:3, cat:"재무·실적", src:"Yahoo Finance · Finviz"},
+{en:"enterprise value (EV)", ko:"기업가치", desc:"시가총액 + 부채 - 현금. 회사를 통째로 살 때의 실질 가격. EV/EBITDA는 M&A·가치평가의 표준 지표.", ex:"The deal values the company at an EV/EBITDA of 12x.", exKo:"이 딜은 회사를 EV/EBITDA 12배로 평가한 거예요.", lv:3, cat:"재무·실적", src:"Yahoo Finance 통계 화면"},
+{en:"ROA / ROIC", ko:"총자산이익률 / 투하자본이익률", desc:"ROA=총자산 대비 이익, ROIC=투자된 자본 대비 이익. ROE와 함께 수익성 3대 지표.", ex:"High ROIC companies compound value over time.", exKo:"ROIC가 높은 기업은 시간이 갈수록 가치가 복리로 커져요.", lv:3, cat:"재무·실적", src:"Finviz 종목 화면"},
+{en:"debt-to-equity (D/E)", ko:"부채비율", desc:"부채 ÷ 자기자본. Finviz 표기 'Debt/Eq'. 높을수록 빚이 많은 회사. 금리 인상기에 특히 중요.", ex:"A debt-to-equity ratio above 2 signals heavy leverage.", exKo:"부채비율이 2를 넘으면 빚 부담이 크다는 신호예요.", lv:3, cat:"재무·실적", src:"Finviz · Yahoo Finance"},
+{en:"current ratio / quick ratio", ko:"유동비율 / 당좌비율", desc:"단기 부채를 갚을 능력. 유동자산÷유동부채. 1 이상이면 단기 지급능력 양호.", ex:"A current ratio of 0.8 raises liquidity concerns.", exKo:"유동비율 0.8은 유동성 우려를 낳아요.", lv:3, cat:"재무·실적", src:"Finviz 종목 화면"},
+{en:"fair value", ko:"적정 가치", desc:"분석 모델이 계산한 주식의 본래 가치. 현재가보다 높으면 저평가. 리서치 사이트(Morningstar 등) 핵심 개념.", ex:"Travelers stock fair value edges higher on margin outlook.", exKo:"이익률 전망 개선에 트래블러스의 적정 가치가 상향됐어요. (2026-07-16 실제 헤드라인)", lv:3, cat:"재무·실적", src:"Yahoo Finance 뉴스 헤드라인 (2026-07-16)"},
+{en:"float / short float", ko:"유통 주식수 / 공매도 비율", desc:"float=실제 시장에서 거래 가능한 주식수(Shs Float). short float=그중 공매도된 비율 — 20%+ 면 숏 스퀴즈 후보.", ex:"The stock's short float of 25% makes it a squeeze candidate.", exKo:"공매도 비율 25%라 숏 스퀴즈 후보예요.", lv:3, cat:"거래", src:"Finviz 종목 화면"},
+{en:"short interest / short ratio", ko:"공매도 잔고 / 공매도 비율(일수)", desc:"공매도된 주식 총량과, 평균 거래량으로 나눈 청산 소요 일수(days to cover).", ex:"Short interest rose 15% over the past month.", exKo:"지난 한 달간 공매도 잔고가 15% 늘었어요.", lv:3, cat:"거래", src:"Finviz 종목 화면"},
+// ---------- 순환매·세금 (2026-07-16 IRS·금융매체 확인) ----------
+{en:"sector rotation", ko:"섹터 로테이션 (업종 순환매)", desc:"경기 사이클에 따라 돈이 한 섹터에서 다른 섹터로 옮겨가는 현상. 경기 초반엔 기술·임의소비재로, 후반엔 에너지·필수소비재·유틸리티 같은 방어주로 이동하는 식.", ex:"Investors rotated out of growth stocks and into defensive sectors.", exKo:"투자자들이 성장주에서 빠져나와 방어 섹터로 순환매했어요.", lv:2, cat:"시장·경제", src:"마켓워치·CNBC 등 금융 매체 상시 용어"},
+{en:"capital gains tax", ko:"양도소득세 (자본이득세)", desc:"주식을 팔아 번 차익에 매기는 세금. 보유 1년 이하=단기(short-term, 일반소득세율 최대 37%), 1년 초과=장기(long-term, 우대세율 0/15/20%).", ex:"He held the stock for 14 months to qualify for the lower long-term capital gains rate.", exKo:"그는 낮은 장기 양도소득세율을 적용받으려고 14개월을 보유했어요.", lv:2, cat:"세금", src:"IRS Topic no. 409 (irs.gov)"},
+{en:"short-term vs. long-term (holding period)", ko:"단기 보유 vs 장기 보유", desc:"세금 계산의 기준선은 정확히 '1년'. 매수일 다음 날부터 세서 1년을 넘겨 팔아야 장기(long-term)로 인정돼 세율이 낮아짐.", ex:"Selling one day early can turn a long-term gain into a short-term one.", exKo:"하루만 일찍 팔아도 장기 차익이 단기 차익으로 바뀔 수 있어요.", lv:3, cat:"세금", src:"IRS Topic no. 409 (irs.gov)"},
+{en:"wash sale (rule)", ko:"워시세일 규칙 (손실 재매수 제한)", desc:"손실 확정 후 30일 이내(전후 합쳐 61일)에 '실질적으로 동일한' 종목을 다시 사면 그 손실을 세금 공제로 못 씀. 손실은 사라지지 않고 재매수한 주식의 취득원가에 더해짐.", ex:"If you sell at a loss and buy back the same stock within 30 days, it triggers the wash sale rule.", exKo:"손실 매도 후 30일 안에 같은 종목을 다시 사면 워시세일 규칙에 걸려요.", lv:3, cat:"세금", src:"IRC §1091 · Fidelity/Schwab 세금 가이드"},
+{en:"cost basis", ko:"취득원가", desc:"주식을 살 때 실제로 낸 금액(수수료 포함). 팔 때 (매도가 - 취득원가) = 양도차익. 워시세일이 발생하면 이 취득원가가 조정됨.", ex:"Your cost basis is $50/share, so selling at $70 gives you a $20 gain per share.", exKo:"취득원가가 주당 50달러라면, 70달러에 팔면 주당 20달러 이익이에요.", lv:3, cat:"세금", src:"증권사 세금 명세서(Form 1099-B) 표준 항목"},
+{en:"tax-loss harvesting", ko:"절세매도 (손실 실현 전략)", desc:"연말에 손실 난 종목을 일부러 팔아 다른 종목의 이익과 상계해 세금을 줄이는 전략. 워시세일 규칙에 안 걸리게 30일 이상 재매수를 피해야 함.", ex:"Investors often do tax-loss harvesting in December to offset capital gains.", exKo:"투자자들은 흔히 12월에 절세매도로 양도차익을 상쇄해요.", lv:3, cat:"세금", src:"Fidelity/Schwab 세금 가이드"},
+{en:"qualified dividend", ko:"적격배당금", desc:"일정 조건(60일 이상 보유 등)을 만족한 배당금은 일반소득세가 아니라 더 낮은 장기양도세율로 과세됨. 증권사 1099-DIV에 별도 항목으로 표시.", ex:"Most dividends from U.S. companies are taxed as qualified dividends.", exKo:"대부분의 미국 기업 배당금은 적격배당금으로 과세돼요.", lv:3, cat:"세금", src:"Form 1099-DIV 표준 항목"},
+{en:"1099-DIV / 1099-B", ko:"배당·매매 세금 명세서", desc:"매년 1~2월 증권사가 보내주는 세금 서류. 1099-DIV=받은 배당금 내역, 1099-B=매도한 주식의 손익 내역. 미국 세금 신고(tax return) 필수 서류.", ex:"You'll need your 1099-B to report stock sales on your tax return.", exKo:"세금 신고에 주식 매도 내역을 넣으려면 1099-B가 필요해요.", lv:3, cat:"세금", src:"미국 증권사(Fidelity·Schwab 등) 실제 발급 서류명"},
+];
+
+// ============ 실전 문장 (사이트·뉴스 스타일) ============
+const SENTENCES = [
+{lv:1, src:"증권사 앱 화면", en:"Your order to buy 5 shares of AAPL at market price has been filled.", ko:"AAPL 5주 시장가 매수 주문이 체결되었습니다. (filled = 체결됨)"},
+{lv:1, src:"증권사 앱 화면", en:"Portfolio value: $12,450.30 (+$230.15, +1.88% today)", ko:"포트폴리오 평가액: 12,450.30달러 (오늘 +230.15달러, +1.88%)"},
+{lv:1, src:"Yahoo Finance", en:"Apple Inc. (AAPL) — 195.32 +2.45 (+1.27%) At close: 4:00PM EST", ko:"애플 — 195.32달러, 전일 대비 +2.45달러(+1.27%), 동부시간 오후 4시 종가 기준"},
+{lv:1, src:"CNBC 헤드라인", en:"Dow closes 300 points higher as tech stocks rally.", ko:"기술주 랠리에 다우지수 300포인트 상승 마감."},
+{lv:1, src:"CNBC 헤드라인", en:"S&P 500 hits record high for the third straight day.", ko:"S&P 500, 3거래일 연속 사상 최고치 경신."},
+{lv:2, src:"실적 뉴스", en:"Microsoft beats earnings expectations, but shares fall on weak guidance.", ko:"마이크로소프트, 실적은 예상치를 웃돌았지만 부진한 가이던스에 주가 하락."},
+{lv:2, src:"실적 뉴스", en:"Tesla reports Q2 EPS of $0.91 vs. $0.82 expected; revenue of $24.9B vs. $24.5B expected.", ko:"테슬라 2분기 EPS 0.91달러(예상 0.82달러), 매출 249억 달러(예상 245억 달러) 발표."},
+{lv:2, src:"애널리스트 리포트", en:"We maintain our Overweight rating and raise our price target from $220 to $260.", ko:"'비중확대' 의견을 유지하며 목표주가를 220달러에서 260달러로 상향합니다."},
+{lv:2, src:"증권사 알림", en:"NVDA is up 5% in pre-market trading following its earnings report.", ko:"엔비디아가 실적 발표 이후 장전 거래에서 5% 상승 중입니다."},
+{lv:2, src:"마켓워치", en:"Investors rotated out of growth stocks and into defensive sectors like utilities.", ko:"투자자들이 성장주에서 빠져나와 유틸리티 같은 방어 섹터로 이동했습니다. (rotation = 순환매)"},
+{lv:3, src:"실적발표 콜 (CEO)", en:"We delivered record revenue this quarter, driven by strong demand for our data center products.", ko:"데이터센터 제품에 대한 강한 수요에 힘입어 이번 분기 사상 최대 매출을 달성했습니다."},
+{lv:3, src:"실적발표 콜 (CFO)", en:"For fiscal 2026, we expect revenue in the range of $110 to $115 billion, representing 20% growth at the midpoint.", ko:"2026 회계연도 매출은 1,100억~1,150억 달러로, 중간값 기준 20% 성장을 예상합니다."},
+{lv:3, src:"연준(Fed) 성명", en:"The Committee decided to maintain the target range for the federal funds rate at 4-1/4 to 4-1/2 percent.", ko:"위원회는 연방기금금리 목표 범위를 4.25~4.50%로 유지하기로 결정했습니다."},
+{lv:3, src:"블룸버그", en:"Treasury yields climbed after the hotter-than-expected CPI print dashed hopes for a near-term rate cut.", ko:"예상보다 높은 CPI 수치가 조기 금리 인하 기대를 꺾으면서 국채 금리가 상승했습니다. (print = 발표된 수치)"},
+{lv:3, src:"10-K 공시", en:"Our business is subject to intense competition, which could adversely affect our operating results.", ko:"당사 사업은 치열한 경쟁에 노출되어 있으며, 이는 영업 실적에 부정적 영향을 줄 수 있습니다. (위험 요인 섹션의 전형적 문구)"},
+// ---- 2026-07-16 Yahoo Finance에 실제로 올라온 헤드라인 ----
+{lv:2, src:"Yahoo Finance 실제 헤드라인 (2026-07-16)", en:"Goldman Sachs upgrades Toast to 'Buy', raises price target.", ko:"골드만삭스, 토스트 투자의견 '매수'로 상향하고 목표주가 인상. (upgrade + raise price target — 애널리스트 뉴스의 전형)"},
+{lv:2, src:"Yahoo Finance 실제 헤드라인 (2026-07-16)", en:"Why Meta stock is soaring today.", ko:"메타 주가가 오늘 급등하는 이유. (soar = 치솟다, 급등 기사 단골 동사)"},
+{lv:2, src:"Yahoo Finance 실제 헤드라인 (2026-07-16)", en:"How to play Micron after it lost a quarter of its value.", ko:"주가가 4분의 1 빠진 마이크론, 어떻게 대응할까. (play = 매매 전략을 짜다, lose a quarter of its value = 가치의 25% 하락)"},
+{lv:3, src:"Yahoo Finance 실제 헤드라인 (2026-07-16)", en:"Big bank profit engines expected to roar into earnings.", ko:"대형 은행들의 수익 엔진이 실적 시즌에 굉음을 낼 전망. (roar into earnings = 실적 시즌에 강하게 진입하다)"},
+{lv:3, src:"Yahoo Finance 실제 헤드라인 (2026-07-16)", en:"Wall Street weighs next catalyst for AI trade.", ko:"월가, AI 관련주의 다음 촉매를 저울질. (weigh = 따져보다, catalyst = 주가를 움직일 재료)"},
+];
+
+// ============ 상태 ============
+let mode = "study";
+let lvFilter = 0;
+let catFilter = "전체";
+let query = "";
+let known = new Set(JSON.parse(localStorage.getItem("usstock_known") || "[]"));
+// 플래시카드 상태
+let flashDeck = [], flashIdx = 0, flashFlipped = false;
+// 퀴즈 상태
+let quizQs = [], quizIdx = 0, quizScore = 0, quizDone = false, quizAnswered = false;
+
+const $ = id => document.getElementById(id);
+const LVNAME = {1:"초급",2:"중급",3:"고급"};
+
+function saveKnown(){ localStorage.setItem("usstock_known", JSON.stringify([...known])); }
+
+// ---------- 성장 시스템 (진도에 따라 앱이 같이 진화) ----------
+const STAGE_GOAL = 70; // 각 레벨 70% 암기 시 다음 단계로
+const STAGES = [
+  {name:"🌱 새싹 투자자", focus:1},
+  {name:"📈 주린이 탈출", focus:2},
+  {name:"💼 실전 투자자", focus:3},
+  {name:"🏆 월가 마스터", focus:3},
+];
+function levelStats(){
+  return [1,2,3].map(lv=>{
+    const all = TERMS.filter(t=>t.lv===lv);
+    const done = all.filter(t=>known.has(t.en)).length;
+    return {lv, done, total:all.length, pct: all.length? Math.round(100*done/all.length) : 0};
+  });
+}
+function getStage(){
+  const s = levelStats();
+  let stage = 1;
+  if(s[0].pct >= STAGE_GOAL) stage = 2;
+  if(stage===2 && s[1].pct >= STAGE_GOAL) stage = 3;
+  if(stage===3 && s[2].pct >= STAGE_GOAL) stage = 4;
+  return stage;
+}
+function getFocusLevel(){ return STAGES[getStage()-1].focus; }
+function nextGoalMsg(){
+  const s = levelStats(), stage = getStage();
+  if(stage===1) return `초급 ${STAGE_GOAL}% 달성 시 <b>📈 주린이 탈출</b>로 승급! (현재 ${s[0].pct}%)`;
+  if(stage===2) return `중급 ${STAGE_GOAL}% 달성 시 <b>💼 실전 투자자</b>로 승급! (현재 ${s[1].pct}%)`;
+  if(stage===3) return `고급 ${STAGE_GOAL}% 달성 시 <b>🏆 월가 마스터</b>! (현재 ${s[2].pct}%)`;
+  return `모든 레벨을 정복했어요. 퀴즈 복습으로 유지하세요!`;
+}
+
+// ---------- 발음 듣기 (모바일 대응) ----------
+let _ttsVoices = [];
+function _loadVoices(){
+  try{ _ttsVoices = window.speechSynthesis.getVoices() || []; }catch(e){ _ttsVoices = []; }
+}
+if("speechSynthesis" in window){
+  _loadVoices();
+  window.speechSynthesis.onvoiceschanged = _loadVoices;
+}
+function _pickEnVoice(){
+  if(!_ttsVoices.length) _loadVoices();
+  return _ttsVoices.find(v=>/en[-_]US/i.test(v.lang))
+      || _ttsVoices.find(v=>/^en/i.test(v.lang)) || null;
+}
+function ttsToast(msg){
+  let t = document.getElementById("ttsToast");
+  if(!t){ t = document.createElement("div"); t.id = "ttsToast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove("show"), 3400);
+}
+// 발음 재생. btn을 넘기면 재생 중 표시. iOS는 사용자 탭 안에서 동기 호출 필수라 speak는 setTimeout 없이 즉시 호출.
+function speak(text, btn){
+  const synth = window.speechSynthesis;
+  if(!synth || typeof SpeechSynthesisUtterance === "undefined"){
+    ttsToast("이 브라우저는 발음(TTS)을 지원하지 않아요");
+    return;
+  }
+  // 크롬: cancel 직후 speak가 씹히는 버그 → 재생 중일 때만 취소
+  if(synth.speaking || synth.pending) synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US";
+  u.rate = 0.9;
+  const v = _pickEnVoice();
+  if(v) u.voice = v;
+  let started = false;
+  u.onstart = ()=>{ started = true; if(btn) btn.classList.add("playing"); };
+  u.onend   = ()=>{ if(btn) btn.classList.remove("playing"); };
+  u.onerror = (ev)=>{
+    if(btn) btn.classList.remove("playing");
+    if(ev.error && ev.error !== "canceled" && ev.error !== "interrupted")
+      ttsToast("발음 오류(" + ev.error + ") · 볼륨·무음 모드를 확인하세요");
+  };
+  try{
+    synth.speak(u);
+    synth.resume(); // 크롬이 pause 상태로 시작하는 버그 방지
+  }catch(e){
+    ttsToast("재생 실패: " + e.message);
+    return;
+  }
+  // 시작 신호가 안 오면 원인 진단 (음성 개수 표시 → iframe/음성 문제 판별용)
+  setTimeout(()=>{
+    if(!started){
+      const n = (_ttsVoices || []).length;
+      ttsToast("소리가 시작되지 않았어요 (설치된 음성 " + n + "개) · 볼륨/무음 확인, 계속 안 되면 알려주세요");
+    }
+  }, 800);
+}
+function wireSpeakButtons(root){
+  root.querySelectorAll(".speak-btn").forEach(b=> b.onclick = e=>{
+    e.stopPropagation();
+    speak(b.dataset.speak, b);
+  });
+}
+
+// ---------- 오늘의 5단어 ----------
+function todayKey(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function seededShuffle(arr, seed){
+  let s = 0;
+  for(let i=0;i<seed.length;i++) s = (s*31 + seed.charCodeAt(i)) >>> 0;
+  const rand = ()=>{ s = (s*1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(rand()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function getDaily5(force){
+  const key = todayKey();
+  let stored = JSON.parse(localStorage.getItem("usstock_daily") || "null");
+  if(!force && stored && stored.date===key && stored.words && stored.words.length){
+    return stored.words.map(en => TERMS.find(t=>t.en===en)).filter(Boolean);
+  }
+  // 적응형: 집중 레벨의 안 외운 단어 4개 + 다른 레벨 1개 (부족하면 채움)
+  const focus = getFocusLevel();
+  const seed = force ? key + "-" + Date.now() : key;
+  const unknown = TERMS.filter(t=>!known.has(t.en));
+  const focusPool = unknown.filter(t=>t.lv===focus);
+  const otherPool = unknown.filter(t=>t.lv!==focus).sort((a,b)=>a.lv-b.lv);
+  let picked = seededShuffle(focusPool, seed).slice(0,4);
+  picked = picked.concat(seededShuffle(otherPool, seed+"x").slice(0, 5-picked.length));
+  if(picked.length < 5){ // 거의 다 외웠으면 아는 단어로 복습
+    const rest = TERMS.filter(t=>!picked.includes(t));
+    picked = picked.concat(seededShuffle(rest, seed+"y").slice(0, 5-picked.length));
+  }
+  localStorage.setItem("usstock_daily", JSON.stringify({date:key, words:picked.map(t=>t.en)}));
+  return picked;
+}
+
+function filtered(){
+  return TERMS.filter(t =>
+    (lvFilter===0 || t.lv===lvFilter) &&
+    (catFilter==="전체" || t.cat===catFilter) &&
+    (query==="" || (t.en+t.ko+t.desc).toLowerCase().includes(query))
+  );
+}
+
+function renderProgress(){
+  const byLv = levelStats();
+  const totDone = known.size, tot = TERMS.length;
+  const stage = getStage(), focus = getFocusLevel();
+  // 승급 축하: 저장된 최고 단계보다 올라갔을 때 한 번만
+  const prevBest = Number(localStorage.getItem("usstock_stage") || 1);
+  let celebrate = "";
+  if(stage > prevBest){
+    localStorage.setItem("usstock_stage", String(stage));
+    celebrate = `<div style="background:var(--green-soft); color:var(--green); border-radius:8px; padding:8px 12px; margin-top:8px; font-weight:700">🎉 승급! 이제 <b>${STAGES[stage-1].name}</b> 단계예요 — 앱이 ${LVNAME[focus]} 중심으로 바뀝니다</div>`;
+  } else if(stage < prevBest && known.size===0){
+    localStorage.setItem("usstock_stage", "1"); // 진도 초기화 시 단계도 리셋
+  }
+  $("progBox").innerHTML =
+    `<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+       <b style="color:var(--ink); font-size:1rem">${STAGES[stage-1].name}</b>
+       <span style="font-size:.78rem; background:var(--blue-soft); color:var(--blue); padding:2px 10px; border-radius:999px">🎯 지금 집중: ${LVNAME[focus]}</span>
+       <span style="margin-left:auto">내 진도: ${totDone} / ${tot}</span>
+     </div>
+     <div style="margin-top:4px">${nextGoalMsg()}</div>` +
+    celebrate +
+    byLv.map(x=>`
+      <div style="margin-top:6px">
+        <span class="lv lv${x.lv}">${LVNAME[x.lv]}</span> ${x.done}/${x.total} (${x.pct}%)
+        <div class="progress-bar"><div class="progress-fill" style="width:${x.pct}%"></div></div>
+      </div>`).join("");
+}
+
+function renderCats(){
+  const cats = ["전체", ...new Set(TERMS.map(t=>t.cat))];
+  $("catZone").innerHTML = cats.map(c=>
+    `<span class="chip catchip ${c===catFilter?'on':''}" data-cat="${c}">${c}</span>`).join("");
+  document.querySelectorAll(".catchip").forEach(el=>
+    el.onclick = ()=>{ catFilter = el.dataset.cat; render(); });
+}
+
+// ---------- 학습 카드 공통 ----------
+function termCardHtml(t){
+  return `
+    <div class="term-card">
+      <div class="term-head">
+        <span class="lv lv${t.lv}">${LVNAME[t.lv]}</span>
+        <span class="cat-tag">${t.cat}</span>
+        <span class="term-en">${t.en}</span>
+        <button class="speak-btn" data-speak="${t.en.replace(/"/g,"&quot;")}" title="발음 듣기">🔊</button>
+        <span class="term-ko">— ${t.ko}</span>
+        <button class="know-btn ${known.has(t.en)?'known':''}" data-en="${t.en}">${known.has(t.en)?'✓ 외웠어요':'외웠나요?'}</button>
+      </div>
+      <div class="term-desc">${t.desc}</div>
+      ${t.src ? `<div class="term-src">📍 실제 출처: ${t.src}</div>` : ""}
+      <div class="term-ex"><div class="en">"${t.ex}"</div><div class="ko">${t.exKo}</div></div>
+    </div>`;
+}
+function wireTermCards(root){
+  wireSpeakButtons(root);
+  root.querySelectorAll(".know-btn").forEach(b=> b.onclick = ()=>{
+    const en=b.dataset.en;
+    known.has(en) ? known.delete(en) : known.add(en);
+    saveKnown(); render();
+  });
+}
+
+// ---------- 학습 모드 ----------
+function renderStudy(){
+  const list = filtered();
+  $("countInfo").textContent = `${list.length}개 단어`;
+  $("content").innerHTML = list.map(termCardHtml).join("") || "<p style='text-align:center;color:var(--sub);padding:40px'>검색 결과가 없어요.</p>";
+  wireTermCards($("content"));
+}
+
+// ---------- 오늘의 5단어 모드 ----------
+function renderDaily(){
+  $("countInfo").textContent = "";
+  const words = getDaily5(false);
+  const doneCount = words.filter(t=>known.has(t.en)).length;
+  $("content").innerHTML = `
+    <div class="daily-head">
+      <h2>🗓️ 오늘의 5단어 — ${todayKey()}</h2>
+      <p>${doneCount} / 5 완료 · 🎯 지금 집중 레벨(${LVNAME[getFocusLevel()]}) 위주로 매일 자동 선별 — 진도가 오르면 단어도 함께 어려워져요</p>
+      <button class="redraw-btn" id="redrawBtn">🔀 다른 단어로 다시 뽑기</button>
+    </div>
+    ${words.map(termCardHtml).join("")}`;
+  wireTermCards($("content"));
+  $("redrawBtn").onclick = ()=>{ getDaily5(true); renderDaily(); };
+}
+
+// ---------- 플래시카드 ----------
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function startFlash(){
+  flashDeck = shuffle([...filtered()]);
+  flashIdx = 0; flashFlipped = false;
+}
+
+function renderFlash(){
+  $("countInfo").textContent = "";
+  if(!flashDeck.length){ $("content").innerHTML = "<p style='text-align:center;color:var(--sub);padding:40px'>이 조건에 맞는 단어가 없어요.</p>"; return; }
+  if(flashIdx >= flashDeck.length){
+    $("content").innerHTML = `<div class="quiz-score"><div style="font-size:2.5rem">🎉</div>
+      <p style="margin-top:10px">이 세트의 카드 ${flashDeck.length}장을 모두 봤어요!</p>
+      <button class="primary-btn" onclick="startFlash();render()">다시 섞어서 시작</button></div>`;
+    return;
+  }
+  const t = flashDeck[flashIdx];
+  $("content").innerHTML = `
+    <div class="flash-zone">
+      <div class="flash-prog">${flashIdx+1} / ${flashDeck.length} <span class="lv lv${t.lv}">${LVNAME[t.lv]}</span></div>
+      <div class="flash-card" id="flashCard">
+        ${flashFlipped
+          ? `<div class="ans-ko">${t.ko}</div><div class="ans-desc">${t.desc}</div>
+             <div class="ans-ex"><i>"${t.ex}"</i><br><span style="color:var(--sub)">${t.exKo}</span></div>`
+          : `<div class="big">${t.en}</div>
+             <button class="speak-btn" id="flashSpeak" data-speak="${t.en.replace(/"/g,"&quot;")}" title="발음 듣기" style="margin-top:10px">🔊</button>
+             <div class="hint">카드를 클릭하면 뜻이 보여요</div>`}
+      </div>
+      <div class="flash-btns">
+        ${flashFlipped
+          ? `<button class="b-no" id="fNo">🙅 아직 몰라요</button><button class="b-yes" id="fYes">✅ 외웠어요</button>`
+          : `<button class="b-flip" id="fFlip">뒤집기</button>`}
+      </div>
+    </div>`;
+  $("flashCard").onclick = ()=>{ flashFlipped = !flashFlipped; renderFlash(); };
+  if(flashFlipped){
+    $("fYes").onclick = e=>{ e.stopPropagation(); known.add(t.en); saveKnown(); flashIdx++; flashFlipped=false; renderProgress(); renderFlash(); };
+    $("fNo").onclick = e=>{ e.stopPropagation(); known.delete(t.en); saveKnown(); flashDeck.push(t); flashIdx++; flashFlipped=false; renderProgress(); renderFlash(); };
+  } else {
+    $("fFlip").onclick = e=>{ e.stopPropagation(); flashFlipped=true; renderFlash(); };
+    $("flashSpeak").onclick = e=>{ e.stopPropagation(); speak(t.en, e.currentTarget); };
+  }
+}
+
+// ---------- 퀴즈 ----------
+let quizAdaptive = false;
+function startQuiz(){
+  let pool;
+  quizAdaptive = (lvFilter===0 && catFilter==="전체");
+  if(quizAdaptive){
+    // 적응형: 집중 레벨의 안 외운 단어 7개 + 외운 단어 복습 3개
+    const focus = getFocusLevel();
+    const focusUnknown = shuffle(TERMS.filter(t=>t.lv===focus && !known.has(t.en))).slice(0,7);
+    const review = shuffle(TERMS.filter(t=>known.has(t.en))).slice(0,3);
+    pool = [...focusUnknown, ...review];
+    if(pool.length < 10){
+      const rest = TERMS.filter(t=>!pool.includes(t));
+      pool = pool.concat(shuffle([...rest]).slice(0, 10-pool.length));
+    }
+  } else {
+    pool = filtered();
+  }
+  quizQs = shuffle([...pool]).slice(0,10).map(t=>{
+    const wrongs = shuffle(TERMS.filter(x=>x.en!==t.en).map(x=>x.ko)).slice(0,3);
+    return {t, opts: shuffle([t.ko, ...wrongs]), isReview: known.has(t.en)};
+  });
+  quizIdx=0; quizScore=0; quizDone=false; quizAnswered=false;
+}
+
+function renderQuiz(){
+  $("countInfo").textContent = "";
+  if(!quizQs.length){ $("content").innerHTML = "<p style='text-align:center;color:var(--sub);padding:40px'>이 조건에 맞는 단어가 없어요. 필터를 바꿔보세요.</p>"; return; }
+  if(quizDone){
+    const pct = Math.round(100*quizScore/quizQs.length);
+    const msg = pct===100 ? "완벽해요! 🏆" : pct>=70 ? "훌륭해요! 👏" : pct>=40 ? "조금만 더! 💪" : "다시 학습 모드로 복습해 봐요 📖";
+    $("content").innerHTML = `<div class="quiz-score">
+      <div class="score">${quizScore} / ${quizQs.length}</div><p>${msg}</p>
+      <button class="primary-btn" onclick="startQuiz();render()">새 퀴즈 시작</button></div>`;
+    return;
+  }
+  const q = quizQs[quizIdx];
+  const modeTag = quizAdaptive
+    ? `<span style="color:var(--blue)">🎯 맞춤 퀴즈 (${LVNAME[getFocusLevel()]} 중심${q.isReview ? " · 이 문제는 복습" : ""})</span>`
+    : "";
+  $("content").innerHTML = `
+    <div class="quiz-q">
+      <div class="qhint">문제 ${quizIdx+1} / ${quizQs.length} · 점수 ${quizScore} ${modeTag}</div>
+      <h3>${q.t.en}</h3>
+      <div class="qhint">이 단어의 뜻은?</div>
+      ${q.opts.map(o=>`<button class="opt" data-ko="${o}">${o}</button>`).join("")}
+      <div id="reviewNote" class="qhint" style="display:none; margin-top:8px"></div>
+    </div>`;
+  document.querySelectorAll(".opt").forEach(b=> b.onclick = ()=>{
+    if(quizAnswered) return;
+    quizAnswered = true;
+    const right = b.dataset.ko === q.t.ko;
+    if(right) quizScore++;
+    document.querySelectorAll(".opt").forEach(x=>{
+      if(x.dataset.ko===q.t.ko) x.classList.add("correct");
+      else if(x===b) x.classList.add("wrong");
+    });
+    // 복습 문제를 틀리면 '외웠어요' 해제 → 다시 학습 대상으로
+    let delay = right ? 800 : 1600;
+    if(!right && q.isReview && known.has(q.t.en)){
+      known.delete(q.t.en); saveKnown(); renderProgress();
+      const note = document.getElementById("reviewNote");
+      note.style.display = "block";
+      note.innerHTML = `🔄 <b>${q.t.en}</b>의 '외웠어요' 체크가 풀렸어요 — 학습 목록으로 돌아갑니다`;
+      delay = 2400;
+    }
+    setTimeout(()=>{
+      quizIdx++; quizAnswered=false;
+      if(quizIdx>=quizQs.length) quizDone=true;
+      renderQuiz();
+    }, delay);
+  });
+}
+
+// ---------- 실전 문장 ----------
+function renderSent(){
+  const list = SENTENCES.filter(s => lvFilter===0 || s.lv===lvFilter);
+  $("countInfo").textContent = `${list.length}개 문장 · 카드를 클릭하면 해석이 보여요`;
+  $("content").innerHTML = list.map((s,i)=>`
+    <div class="sent-card" data-i="${i}">
+      <div class="src"><span class="lv lv${s.lv}">${LVNAME[s.lv]}</span> &nbsp;출처 스타일: ${s.src}</div>
+      <div class="en">${s.en} <button class="speak-btn" data-speak="${s.en.replace(/"/g,"&quot;")}" title="발음 듣기">🔊</button></div>
+      <div class="ko">💡 ${s.ko}</div>
+      <div class="tap">클릭해서 해석 보기 ▾</div>
+    </div>`).join("");
+  document.querySelectorAll(".sent-card").forEach(el=>
+    el.onclick = ()=> el.classList.toggle("open"));
+  wireSpeakButtons($("content"));
+}
+
+// ---------- 공통 렌더 ----------
+function render(){
+  renderProgress();
+  renderCats();
+  const showCat = (mode==="study" || mode==="flash" || mode==="quiz");
+  $("catZone").style.display = showCat ? "flex" : "none";
+  $("search").style.display = mode==="study" ? "block" : "none";
+  if(mode==="study") renderStudy();
+  else if(mode==="daily") renderDaily();
+  else if(mode==="flash") renderFlash();
+  else if(mode==="quiz") renderQuiz();
+  else renderSent();
+}
+
+document.querySelectorAll(".tabs button").forEach(b=> b.onclick = ()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  mode = b.dataset.mode;
+  if(mode==="flash") startFlash();
+  if(mode==="quiz") startQuiz();
+  render();
+});
+document.querySelectorAll(".lvchip").forEach(el=> el.onclick = ()=>{
+  document.querySelectorAll(".lvchip").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+  lvFilter = Number(el.dataset.lv);
+  if(mode==="flash") startFlash();
+  if(mode==="quiz") startQuiz();
+  render();
+});
+$("search").oninput = e=>{ query = e.target.value.toLowerCase(); renderStudy(); };
+
+render();
+</script>
+</body>
+</html>
