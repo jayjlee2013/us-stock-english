@@ -21,91 +21,173 @@
 <title>미국 주식용어 마스터</title>
 <style>
   :root{
-    --bg:#f6f7fb; --card:#ffffff; --ink:#1a2233; --sub:#5b6577; --line:#e3e7ef;
-    --blue:#2563eb; --blue-soft:#eaf0fe; --green:#16a34a; --green-soft:#e8f7ee;
-    --red:#dc2626; --amber:#d97706; --amber-soft:#fdf3e3; --violet:#7c3aed; --violet-soft:#f1eafe;
+    --bg:#eef1f6; --card:#ffffff; --ink:#0f1b2d; --sub:#5a6a80; --faint:#8593a8;
+    --line:#e4e9f1; --line2:#d6ddea;
+    --navy:#12233f; --navy2:#1c3a63;
+    --blue:#2f6df0; --blue-soft:#e8f0fe; --blue-ink:#1f5fd6;
+    --green:#0e9f6e; --green-soft:#e3f6ee; --green-ink:#0a7a54;
+    --red:#dc2626; --red-soft:#fdecec;
+    --amber:#c2740a; --amber-soft:#fdf0dd;
+    --violet:#7b52e0; --violet-soft:#efe9fc;
+    --gold:#b8860f; --gold-soft:#fbf3dd;
+    --shadow:0 1px 2px rgba(16,27,45,.04), 0 8px 24px -12px rgba(16,27,45,.14);
+    --shadow-lg:0 2px 6px rgba(16,27,45,.06), 0 20px 44px -18px rgba(16,27,45,.28);
+    --r:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b1220; --card:#141d2e; --ink:#eef3fb; --sub:#9fb0c7; --faint:#6b7c96;
+      --line:#22304a; --line2:#2b3a56;
+      --navy:#0f1a2e; --navy2:#1a2c4d;
+      --blue:#5b8dff; --blue-soft:#182a49; --blue-ink:#8fb4ff;
+      --green:#34d399; --green-soft:#0f2a20; --green-ink:#5ee9b0;
+      --red:#f87171; --red-soft:#3a1414;
+      --amber:#fbbf24; --amber-soft:#2c210f;
+      --violet:#a78bfa; --violet-soft:#211a3a;
+      --gold:#e7b53c; --gold-soft:#2c2510;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+      --shadow-lg:0 2px 8px rgba(0,0,0,.4), 0 24px 50px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1220; --card:#141d2e; --ink:#eef3fb; --sub:#9fb0c7; --faint:#6b7c96;
+    --line:#22304a; --line2:#2b3a56;
+    --navy:#0f1a2e; --navy2:#1a2c4d;
+    --blue:#5b8dff; --blue-soft:#182a49; --blue-ink:#8fb4ff;
+    --green:#34d399; --green-soft:#0f2a20; --green-ink:#5ee9b0;
+    --red:#f87171; --red-soft:#3a1414;
+    --amber:#fbbf24; --amber-soft:#2c210f;
+    --violet:#a78bfa; --violet-soft:#211a3a;
+    --gold:#e7b53c; --gold-soft:#2c2510;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+    --shadow-lg:0 2px 8px rgba(0,0,0,.4), 0 24px 50px -20px rgba(0,0,0,.7);
+  }
+  :root[data-theme="light"]{
+    --bg:#eef1f6; --card:#ffffff; --ink:#0f1b2d; --sub:#5a6a80; --faint:#8593a8;
+    --line:#e4e9f1; --line2:#d6ddea;
+    --navy:#12233f; --navy2:#1c3a63;
+    --blue:#2f6df0; --blue-soft:#e8f0fe; --blue-ink:#1f5fd6;
+    --green:#0e9f6e; --green-soft:#e3f6ee; --green-ink:#0a7a54;
+    --red:#dc2626; --red-soft:#fdecec;
+    --amber:#c2740a; --amber-soft:#fdf0dd;
+    --violet:#7b52e0; --violet-soft:#efe9fc;
+    --gold:#b8860f; --gold-soft:#fbf3dd;
+    --shadow:0 1px 2px rgba(16,27,45,.04), 0 8px 24px -12px rgba(16,27,45,.14);
+    --shadow-lg:0 2px 6px rgba(16,27,45,.06), 0 20px 44px -18px rgba(16,27,45,.28);
   }
   *{box-sizing:border-box; margin:0; padding:0}
-  body{font-family:'Segoe UI','Malgun Gothic',sans-serif; background:var(--bg); color:var(--ink); line-height:1.55}
-  header{background:linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; padding:28px 20px 20px; text-align:center}
-  header h1{font-size:1.5rem; margin-bottom:4px}
-  header p{opacity:.85; font-size:.9rem}
+  body{font-family:-apple-system,'Segoe UI','Malgun Gothic','Apple SD Gothic Neo',sans-serif; background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased}
+  button{font-family:inherit}
+  button:active{transform:scale(.96)}
+  header{background:linear-gradient(155deg,var(--navy),var(--navy2)); color:#fff; padding:20px 20px 18px; box-shadow:var(--shadow)}
+  .header-row{display:flex; align-items:center; gap:12px; max-width:860px; margin:0 auto}
+  .header-mark{width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0}
+  header h1{font-size:1.3rem; font-weight:700; letter-spacing:-.01em}
+  header p{opacity:.75; font-size:.85rem; margin-top:1px}
+  .theme-btn{margin-left:auto; background:rgba(255,255,255,.14); border:none; color:#fff; width:40px; height:40px; border-radius:11px; cursor:pointer; font-size:1.05rem; transition:background .2s; flex-shrink:0}
+  .theme-btn:hover{background:rgba(255,255,255,.24)}
+  .header-note{max-width:860px; margin:10px auto 0; font-size:.72rem; opacity:.55}
   .wrap{max-width:860px; margin:0 auto; padding:16px}
   /* 탭 */
   .tabs{display:flex; gap:8px; margin:14px 0; flex-wrap:wrap}
-  .tabs button{flex:1; min-width:100px; padding:10px 8px; border:1px solid var(--line); background:var(--card); border-radius:10px; font-size:.95rem; cursor:pointer; color:var(--sub); font-weight:600}
+  .tabs button{flex:1; min-width:100px; padding:11px 8px; border:1px solid var(--line2); background:var(--card); border-radius:13px; font-size:.95rem; cursor:pointer; color:var(--sub); font-weight:600; box-shadow:var(--shadow); transition:transform .12s, box-shadow .2s}
   .tabs button.on{background:var(--blue); color:#fff; border-color:var(--blue)}
   /* 필터 */
   .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px}
-  .chip{padding:6px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card); cursor:pointer; font-size:.85rem; color:var(--sub)}
-  .chip.on{background:var(--ink); color:#fff; border-color:var(--ink)}
-  #search{flex:1; min-width:160px; padding:8px 14px; border:1px solid var(--line); border-radius:999px; font-size:.9rem; outline:none}
+  .chip{padding:7px 15px; border-radius:12px; border:1px solid var(--line2); background:var(--card); cursor:pointer; font-size:.85rem; color:var(--sub); font-weight:600; display:inline-flex; align-items:center; gap:6px; box-shadow:var(--shadow); transition:transform .12s}
+  .chip.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+  .dot{width:8px; height:8px; border-radius:50%; flex-shrink:0}
+  .dot.lv1{background:var(--green)} .dot.lv2{background:var(--amber)} .dot.lv3{background:var(--violet)}
+  #search{flex:1; min-width:160px; padding:9px 14px; border:1px solid var(--line2); background:var(--card); color:var(--ink); border-radius:12px; font-size:.9rem; outline:none}
   #search:focus{border-color:var(--blue)}
   .count{font-size:.8rem; color:var(--sub); margin-bottom:10px}
   /* 레벨 배지 */
-  .lv{font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:6px}
-  .lv1{background:var(--green-soft); color:var(--green)}
+  .lv{font-size:.7rem; font-weight:800; padding:3px 9px; border-radius:7px; letter-spacing:.01em}
+  .lv1{background:var(--green-soft); color:var(--green-ink)}
   .lv2{background:var(--amber-soft); color:var(--amber)}
   .lv3{background:var(--violet-soft); color:var(--violet)}
-  .cat-tag{font-size:.72rem; color:var(--sub); background:var(--bg); padding:2px 8px; border-radius:6px}
+  .cat-tag{font-size:.7rem; color:var(--sub); background:var(--bg); padding:3px 9px; border-radius:7px; font-weight:600}
   /* 학습 카드 */
-  .term-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px}
+  .term-card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; margin-bottom:11px; box-shadow:var(--shadow); transition:transform .12s, box-shadow .25s}
+  .term-card:hover{box-shadow:var(--shadow-lg); transform:translateY(-1px)}
   .term-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
-  .term-en{font-size:1.15rem; font-weight:700; color:var(--blue)}
-  .term-ko{font-weight:600}
+  .term-en{font-size:1.16rem; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
+  .term-ko{font-weight:700}
   .term-desc{color:var(--sub); font-size:.9rem; margin-top:6px}
-  .term-src{color:var(--amber); font-size:.78rem; margin-top:5px}
-  .term-ex{margin-top:10px; padding:10px 12px; background:var(--blue-soft); border-radius:8px; font-size:.9rem}
-  .term-ex .en{font-style:italic}
+  .term-src{color:var(--gold); font-size:.78rem; margin-top:5px; font-weight:600}
+  .term-ex{margin-top:10px; padding:11px 13px; background:var(--blue-soft); border-radius:11px; font-size:.9rem}
+  .term-ex .en{font-style:italic; color:var(--ink)}
   .term-ex .ko{color:var(--sub); margin-top:3px; font-size:.85rem}
-  .know-btn{margin-left:auto; border:1px solid var(--line); background:var(--card); border-radius:8px; padding:4px 12px; cursor:pointer; font-size:.8rem; color:var(--sub); white-space:nowrap}
-  .know-btn.known{background:var(--green-soft); color:var(--green); border-color:var(--green)}
-  .speak-btn{border:1px solid var(--line); background:var(--card); border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:.95rem; line-height:1; color:var(--blue)}
+  .know-btn{margin-left:auto; display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--blue); background:var(--blue-soft); color:var(--blue-ink); border-radius:10px; padding:6px 13px; cursor:pointer; font-size:.8rem; font-weight:700; white-space:nowrap; transition:all .18s}
+  .know-btn.known{background:var(--green-soft); color:var(--green-ink); border-color:var(--green)}
+  .speak-btn{border:1px solid var(--line2); background:var(--card); border-radius:9px; width:32px; height:32px; cursor:pointer; font-size:.95rem; line-height:1; color:var(--blue); transition:background .2s}
   .speak-btn:hover{background:var(--blue-soft)}
   .speak-btn.playing{background:var(--blue); color:#fff; border-color:var(--blue)}
-  #ttsToast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:.85rem; opacity:0; pointer-events:none; transition:.25s; z-index:50; max-width:88%; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.2)}
+  #ttsToast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:999px; font-size:.85rem; opacity:0; pointer-events:none; transition:.25s; z-index:50; max-width:88%; text-align:center; box-shadow:var(--shadow-lg)}
   #ttsToast.show{opacity:.96; transform:translateX(-50%) translateY(0)}
   /* 오늘의 5단어 */
-  .daily-head{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px; text-align:center}
+  .daily-head{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; margin-bottom:14px; text-align:center; box-shadow:var(--shadow)}
   .daily-head h2{font-size:1.2rem; margin-bottom:4px}
   .daily-head p{color:var(--sub); font-size:.85rem}
-  .redraw-btn{margin-top:10px; border:1px solid var(--line); background:var(--bg); border-radius:8px; padding:6px 14px; cursor:pointer; font-size:.82rem; color:var(--sub)}
+  .redraw-btn{margin-top:10px; border:1px solid var(--line2); background:var(--bg); color:var(--sub); border-radius:9px; padding:6px 14px; cursor:pointer; font-size:.82rem}
   /* 플래시카드 */
   .flash-zone{text-align:center; padding:10px 0}
-  .flash-card{background:var(--card); border:1px solid var(--line); border-radius:16px; min-height:280px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; cursor:pointer; box-shadow:0 2px 10px rgba(30,58,138,.06)}
-  .flash-card .big{font-size:2rem; font-weight:800; color:var(--blue)}
+  .flash-card{background:var(--card); border:1px solid var(--line); border-radius:20px; min-height:280px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; cursor:pointer; box-shadow:var(--shadow-lg)}
+  .flash-card .big{font-size:2rem; font-weight:800; color:var(--ink); letter-spacing:-.01em}
   .flash-card .hint{color:var(--sub); font-size:.85rem; margin-top:14px}
-  .flash-card .ans-ko{font-size:1.4rem; font-weight:700; margin-bottom:8px}
+  .flash-card .ans-ko{font-size:1.4rem; font-weight:700; margin-bottom:8px; color:var(--ink)}
   .flash-card .ans-desc{color:var(--sub); font-size:.92rem; max-width:520px}
-  .flash-card .ans-ex{margin-top:14px; padding:10px 14px; background:var(--blue-soft); border-radius:8px; font-size:.88rem; max-width:540px}
+  .flash-card .ans-ex{margin-top:14px; padding:10px 14px; background:var(--blue-soft); border-radius:11px; font-size:.88rem; max-width:540px}
   .flash-btns{display:flex; gap:10px; justify-content:center; margin-top:16px}
-  .flash-btns button{padding:10px 22px; border-radius:10px; border:none; cursor:pointer; font-size:.95rem; font-weight:600}
-  .b-no{background:#fdecec; color:var(--red)}
-  .b-yes{background:var(--green-soft); color:var(--green)}
+  .flash-btns button{padding:10px 22px; border-radius:12px; border:none; cursor:pointer; font-size:.95rem; font-weight:700}
+  .b-no{background:var(--red-soft); color:var(--red)}
+  .b-yes{background:var(--green-soft); color:var(--green-ink)}
   .b-flip{background:var(--blue); color:#fff}
-  .flash-prog{color:var(--sub); font-size:.85rem; margin-bottom:10px}
+  .flash-prog{color:var(--sub); font-size:.85rem; margin-bottom:10px; font-variant-numeric:tabular-nums}
   /* 퀴즈 */
-  .quiz-q{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px}
-  .quiz-q h3{font-size:1.4rem; color:var(--blue); margin-bottom:4px}
+  .quiz-q{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:24px; box-shadow:var(--shadow-lg)}
+  .quiz-q h3{font-size:1.4rem; color:var(--ink); margin-bottom:4px; font-weight:800}
   .quiz-q .qhint{color:var(--sub); font-size:.85rem; margin-bottom:16px}
-  .opt{display:block; width:100%; text-align:left; padding:12px 16px; margin-bottom:8px; border:1px solid var(--line); background:var(--bg); border-radius:10px; cursor:pointer; font-size:.95rem}
+  .opt{display:block; width:100%; text-align:left; padding:12px 16px; margin-bottom:8px; border:1px solid var(--line2); background:var(--bg); color:var(--ink); border-radius:12px; cursor:pointer; font-size:.95rem}
   .opt:hover{border-color:var(--blue)}
-  .opt.correct{background:var(--green-soft); border-color:var(--green); color:var(--green); font-weight:700}
-  .opt.wrong{background:#fdecec; border-color:var(--red); color:var(--red)}
-  .quiz-score{text-align:center; padding:40px 20px; background:var(--card); border-radius:14px; border:1px solid var(--line)}
-  .quiz-score .score{font-size:3rem; font-weight:800; color:var(--blue)}
-  .primary-btn{padding:12px 28px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; margin-top:16px}
+  .opt.correct{background:var(--green-soft); border-color:var(--green); color:var(--green-ink); font-weight:700}
+  .opt.wrong{background:var(--red-soft); border-color:var(--red); color:var(--red)}
+  .quiz-score{text-align:center; padding:40px 20px; background:var(--card); border-radius:18px; border:1px solid var(--line); box-shadow:var(--shadow-lg)}
+  .quiz-score .score{font-size:3rem; font-weight:800; color:var(--blue); font-variant-numeric:tabular-nums}
+  .primary-btn{padding:12px 28px; background:var(--blue); color:#fff; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:16px}
   /* 실전 문장 */
-  .sent-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px; cursor:pointer}
+  .sent-card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; margin-bottom:11px; cursor:pointer; box-shadow:var(--shadow); transition:box-shadow .2s}
+  .sent-card:hover{box-shadow:var(--shadow-lg)}
   .sent-card .src{font-size:.75rem; color:var(--sub); margin-bottom:6px}
-  .sent-card .en{font-weight:600}
+  .sent-card .en{font-weight:700; color:var(--ink)}
   .sent-card .ko{margin-top:8px; color:var(--sub); font-size:.9rem; display:none}
   .sent-card.open .ko{display:block}
   .sent-card .tap{font-size:.75rem; color:var(--blue); margin-top:6px}
-  /* 진도 */
-  .progress-bar{background:var(--line); border-radius:99px; height:8px; overflow:hidden; margin:6px 0 2px}
-  .progress-fill{background:var(--green); height:100%; transition:width .3s}
-  .prog-box{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 16px; margin-bottom:14px; font-size:.85rem; color:var(--sub)}
+  /* 성장 등급 히어로 카드 */
+  .rank{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow-lg)}
+  .rank-top{display:flex; align-items:center; gap:14px}
+  .rank-emblem{width:52px; height:52px; border-radius:15px; background:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0}
+  .rank-name{font-size:1.1rem; font-weight:800; letter-spacing:-.01em; color:var(--ink)}
+  .rank-sub{font-size:.78rem; color:var(--sub); margin-top:1px}
+  .rank-count{margin-left:auto; text-align:right}
+  .rank-count b{font-size:1.4rem; font-weight:800; font-variant-numeric:tabular-nums; color:var(--blue)}
+  .rank-count span{display:block; font-size:.68rem; color:var(--faint)}
+  .rank-goal-row{margin-top:14px; font-size:.82rem; color:var(--sub)}
+  .rank-goal-row b{color:var(--ink)}
+  .track{height:9px; background:var(--line2); border-radius:999px; overflow:hidden; margin-top:7px}
+  .track > i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue),var(--violet)); transition:width .4s}
+  .celebrate{background:var(--green-soft); color:var(--green-ink); border-radius:11px; padding:9px 13px; margin-top:12px; font-weight:700; font-size:.86rem}
+  .lv-breakdown{margin-top:14px; padding-top:12px; border-top:1px solid var(--line)}
+  .lv-row{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:8px; font-size:.8rem; color:var(--sub)}
+  .lv-row:first-child{margin-top:0}
+  .lv-num{margin-left:auto; font-variant-numeric:tabular-nums; font-weight:600; color:var(--ink)}
+  .lv-row .progress-bar{flex-basis:100%; order:3}
+  /* 진도 바 (레벨별 색상) */
+  .progress-bar{background:var(--line2); border-radius:99px; height:7px; overflow:hidden; margin-top:2px}
+  .progress-fill{height:100%; transition:width .3s}
+  .progress-fill.lv1{background:var(--green)}
+  .progress-fill.lv2{background:var(--amber)}
+  .progress-fill.lv3{background:var(--violet)}
   footer{text-align:center; color:var(--sub); font-size:.78rem; padding:24px}
   .maker-sig{margin-top:10px; font-size:.75rem; opacity:.65}
   .maker-sig a{color:var(--blue); text-decoration:none}
@@ -114,9 +196,15 @@
 </head>
 <body>
 <header>
-  <h1>📈 미국 주식용어 마스터</h1>
-  <p>초급부터 고급까지 — 실제 사이트·뉴스·실적발표에서 쓰는 영어</p>
-  <p style="font-size:.75rem; opacity:.7; margin-top:6px">용어 출처: Yahoo Finance · Finviz · stockanalysis.com 실제 화면 + SEC 공시·실적발표·IRS 세금 규정 표준 용어 (2026-07-16 확인)</p>
+  <div class="header-row">
+    <div class="header-mark">📈</div>
+    <div>
+      <h1>미국 주식용어 마스터</h1>
+      <p>초급부터 고급까지 — 실제 사이트·뉴스·실적발표에서 쓰는 영어</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="다크모드 전환">🌙</button>
+  </div>
+  <p class="header-note">용어 출처: Yahoo Finance · Finviz · stockanalysis.com 실제 화면 + SEC 공시·실적발표·IRS 세금 규정 표준 용어 (2026-07-16 확인)</p>
 </header>
 
 <div class="wrap">
@@ -132,9 +220,9 @@
 
   <div class="filters" id="filterZone">
     <span class="chip lvchip on" data-lv="0">전체</span>
-    <span class="chip lvchip" data-lv="1">🟢 초급</span>
-    <span class="chip lvchip" data-lv="2">🟡 중급</span>
-    <span class="chip lvchip" data-lv="3">🟣 고급</span>
+    <span class="chip lvchip" data-lv="1"><span class="dot lv1"></span>초급</span>
+    <span class="chip lvchip" data-lv="2"><span class="dot lv2"></span>중급</span>
+    <span class="chip lvchip" data-lv="3"><span class="dot lv3"></span>고급</span>
     <input id="search" type="text" placeholder="단어·뜻 검색...">
   </div>
   <div class="filters" id="catZone"></div>
@@ -323,6 +411,19 @@ const LVNAME = {1:"초급",2:"중급",3:"고급"};
 
 function saveKnown(){ localStorage.setItem("usstock_known", JSON.stringify([...known])); }
 
+// ---------- 다크모드 ----------
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  localStorage.setItem("usstock_theme", t);
+  const btn = $("themeBtn");
+  if(btn) btn.textContent = t === "dark" ? "☀️" : "🌙";
+}
+function initTheme(){
+  const saved = localStorage.getItem("usstock_theme");
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved || (prefersDark ? "dark" : "light"));
+}
+
 // ---------- 성장 시스템 (진도에 따라 앱이 같이 진화) ----------
 const STAGE_GOAL = 70; // 각 레벨 70% 암기 시 다음 단계로
 const STAGES = [
@@ -473,23 +574,36 @@ function renderProgress(){
   let celebrate = "";
   if(stage > prevBest){
     localStorage.setItem("usstock_stage", String(stage));
-    celebrate = `<div style="background:var(--green-soft); color:var(--green); border-radius:8px; padding:8px 12px; margin-top:8px; font-weight:700">🎉 승급! 이제 <b>${STAGES[stage-1].name}</b> 단계예요 — 앱이 ${LVNAME[focus]} 중심으로 바뀝니다</div>`;
+    celebrate = `<div class="celebrate">🎉 승급! 이제 <b>${STAGES[stage-1].name}</b> 단계예요 — 앱이 ${LVNAME[focus]} 중심으로 바뀝니다</div>`;
   } else if(stage < prevBest && known.size===0){
     localStorage.setItem("usstock_stage", "1"); // 진도 초기화 시 단계도 리셋
   }
-  $("progBox").innerHTML =
-    `<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
-       <b style="color:var(--ink); font-size:1rem">${STAGES[stage-1].name}</b>
-       <span style="font-size:.78rem; background:var(--blue-soft); color:var(--blue); padding:2px 10px; border-radius:999px">🎯 지금 집중: ${LVNAME[focus]}</span>
-       <span style="margin-left:auto">내 진도: ${totDone} / ${tot}</span>
-     </div>
-     <div style="margin-top:4px">${nextGoalMsg()}</div>` +
-    celebrate +
-    byLv.map(x=>`
-      <div style="margin-top:6px">
-        <span class="lv lv${x.lv}">${LVNAME[x.lv]}</span> ${x.done}/${x.total} (${x.pct}%)
-        <div class="progress-bar"><div class="progress-fill" style="width:${x.pct}%"></div></div>
-      </div>`).join("");
+  const stageName = STAGES[stage-1].name;
+  const emblem = stageName.split(" ")[0];
+  const label = stageName.slice(emblem.length + 1);
+  const trackPct = stage <= 3 ? Math.min(100, Math.round(100 * byLv[stage-1].pct / STAGE_GOAL)) : 100;
+  $("progBox").innerHTML = `
+    <div class="rank">
+      <div class="rank-top">
+        <div class="rank-emblem">${emblem}</div>
+        <div>
+          <div class="rank-name">${label}</div>
+          <div class="rank-sub">🎯 지금 집중 레벨 · ${LVNAME[focus]}</div>
+        </div>
+        <div class="rank-count"><b>${totDone}</b><span>/ ${tot} 단어</span></div>
+      </div>
+      <div class="rank-goal-row">${nextGoalMsg()}</div>
+      <div class="track"><i style="width:${trackPct}%"></i></div>
+      ${celebrate}
+      <div class="lv-breakdown">
+        ${byLv.map(x=>`
+          <div class="lv-row">
+            <span class="lv lv${x.lv}">${LVNAME[x.lv]}</span>
+            <span class="lv-num">${x.done}/${x.total} (${x.pct}%)</span>
+            <div class="progress-bar"><div class="progress-fill lv${x.lv}" style="width:${x.pct}%"></div></div>
+          </div>`).join("")}
+      </div>
+    </div>`;
 }
 
 function renderCats(){
@@ -510,7 +624,7 @@ function termCardHtml(t){
         <span class="term-en">${t.en}</span>
         <button class="speak-btn" data-speak="${t.en.replace(/"/g,"&quot;")}" title="발음 듣기">🔊</button>
         <span class="term-ko">— ${t.ko}</span>
-        <button class="know-btn ${known.has(t.en)?'known':''}" data-en="${t.en}">${known.has(t.en)?'✓ 외웠어요':'외웠나요?'}</button>
+        <button class="know-btn ${known.has(t.en)?'known':''}" data-en="${t.en}">${known.has(t.en)?'✓ 외웠어요':'○ 외웠나요?'}</button>
       </div>
       <div class="term-desc">${t.desc}</div>
       ${t.src ? `<div class="term-src">📍 실제 출처: ${t.src}</div>` : ""}
@@ -716,7 +830,12 @@ document.querySelectorAll(".lvchip").forEach(el=> el.onclick = ()=>{
   render();
 });
 $("search").oninput = e=>{ query = e.target.value.toLowerCase(); renderStudy(); };
+$("themeBtn").onclick = ()=>{
+  const cur = document.documentElement.getAttribute("data-theme");
+  applyTheme(cur === "dark" ? "light" : "dark");
+};
 
+initTheme();
 render();
 </script>
 </body>
